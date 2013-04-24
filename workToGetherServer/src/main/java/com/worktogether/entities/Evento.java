@@ -3,26 +3,56 @@ package com.worktogether.entities;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="evento")
 public class Evento {
 	
-	private Long idEvento; 
-	private String descricao; 
-	private Date dataHora; 
-	private String situacao; 
-	private List<Habilidade> habilidades; 
-	private String objetivo; 
-	private byte[] imagem; 
-	private List<Geolocalizacao> geolocalizacoes; 
-	private List<Presenca> presencas; 
-	private List<Publicacao> publicacoes; 
-	private String tipo; //TODO DominioTipoEvento 
+	@Id
+	private Long id;
+	
+	@Column
+	private String descricao;
+	
+	@Column
+	private Date dataHora;
+	
+	@Column
+	private String situacao;
+	
+	@Column
+	private List<Habilidade> habilidades;
+	
+	@Column
+	private String objetivo;
+	
+	@Column
+	private byte[] imagem;
+	
+	@Column
+	private List<Geolocalizacao> geolocalizacoes;
+	
+	@Column
+	private List<Presenca> presencas;
+	
+	@Column
+	private List<Publicacao> publicacoes;
+	
+	@Column
+	private String tipo; //TODO DominioTipoEvento
+	
+	@Column
 	private boolean isSugerido;
 	
-	public Long getIdEvento() {
-		return idEvento;
+	public Long getId() {
+		return id;
 	}
-	public void setIdEvento(Long idEvento) {
-		this.idEvento = idEvento;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getDescricao() {
 		return descricao;

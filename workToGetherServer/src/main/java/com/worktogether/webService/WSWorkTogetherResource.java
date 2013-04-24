@@ -2,6 +2,8 @@ package com.worktogether.webService;
 
 import java.util.List;
 
+import javax.ws.rs.Path;
+
 import com.worktogether.entities.Convite;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
@@ -9,6 +11,7 @@ import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Publicacao;
 import com.worktogether.entities.Usuario;
 
+@Path("/worktogetherresource")
 public class WSWorkTogetherResource {
 	
 	public String validarEmail(String email){return null;} 

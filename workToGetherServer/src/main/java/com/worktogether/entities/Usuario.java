@@ -3,26 +3,57 @@ package com.worktogether.entities;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name="usuario")
 public class Usuario {
 	
-	private Long idUsuario; 
-	private String nome; 
-	private String apelido; 
-	private String telefone; 
-	private String email; 
-	private List<Habilidade> habilidades; 
-	private List<Evento> eventos; 
-	private Long senha; 
-	private List<Presenca> presencas; 
-	private BigDecimal pontuacao; 
+	@Id
+	private Long id; 
+	
+	@Column
+	private String nome;
+	
+	@Column
+	private String apelido;
+	
+	@Column
+	private String telefone;
+	
+	@Column
+	private String email;
+	
+	@Column
+	private List<Habilidade> habilidades;
+	
+	@Column
+	private List<Evento> eventos;
+	
+	@Column
+	private Long senha;
+	
+	@Column
+	private List<Presenca> presencas;
+	
+	@Column
+	private BigDecimal pontuacao;
+	
+	@Column
 	private List<Publicacao> publicacoes; 
+	
+	@Column
 	private byte[] imagem;
 	
-	public Long getIdUsuario() {
-		return idUsuario;
+	public Long getId() {
+		return id;
 	}
-	public void setIdUsuario(Long idUsuario) {
-		this.idUsuario = idUsuario;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getNome() {
 		return nome;

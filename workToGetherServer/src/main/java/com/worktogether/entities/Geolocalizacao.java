@@ -2,6 +2,11 @@ package com.worktogether.entities;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="geolocalizacao")
 public class Geolocalizacao {
 	
 	private Long idGeolocalizacao; 

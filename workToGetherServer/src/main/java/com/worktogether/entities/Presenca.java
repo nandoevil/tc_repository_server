@@ -2,6 +2,11 @@ package com.worktogether.entities;
 
 import java.sql.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="presenca")
 public class Presenca {
 	
 	private Usuario usuario; 
