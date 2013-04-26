@@ -1,12 +1,20 @@
 package com.worktogether.entities;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 
 @Entity
@@ -14,6 +22,7 @@ import javax.persistence.Table;
 public class Usuario {
 	
 	@Id
+	@GeneratedValue
 	private Long id; 
 	
 	@Column
@@ -37,23 +46,35 @@ public class Usuario {
 	@Column
 	private Long senha;
 	
-	@Column
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
+	@OneToMany(mappedBy="usuario")
 	private List<Presenca> presencas;
 	
 	@Column
 	private BigDecimal pontuacao;
 	
-	@Column
+	
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
+	@OneToMany(mappedBy="usuario")
 	private List<Publicacao> publicacoes; 
 	
 	@Column
 	private byte[] imagem;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataHora;
 	
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Date getDataHora() {
+		return dataHora;
+	}
+	public void setDataHora(Date dataHora) {
+		this.dataHora = dataHora;
 	}
 	public String getNome() {
 		return nome;

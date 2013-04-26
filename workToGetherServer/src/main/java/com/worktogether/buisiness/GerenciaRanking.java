@@ -3,6 +3,7 @@ package com.worktogether.buisiness;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.worktogether.entities.DominioTipoPontuacao;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Usuario;
 
@@ -11,7 +12,7 @@ public class GerenciaRanking {
 	private RankingEstrategia ranking; 
 	private CalculoPontuacaoEstrategia calculoPontuacao;
 	
-	public BigDecimal calcularPontuacao(Usuario usuario, Evento evento, /*TODO DominioTipoPontuacao*/ String origem){
+	public BigDecimal calcularPontuacao(Usuario usuario, Evento evento, DominioTipoPontuacao origem){
 		return null;
 	} 
 	public void atualizarPontuacao(Usuario usuario, BigDecimal pontuacao){} 

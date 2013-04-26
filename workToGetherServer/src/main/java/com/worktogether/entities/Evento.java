@@ -1,30 +1,45 @@
 package com.worktogether.entities;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name="evento")
 public class Evento {
 	
 	@Id
+	@GeneratedValue
 	private Long id;
 	
 	@Column
 	private String descricao;
 	
-	@Column
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
 	
 	@Column
 	private String situacao;
 	
-	@Column
+	@OneToMany
+	@JoinTable(name="eventoHabilidade", 
+	           joinColumns= @JoinColumn(name= "idEvento" ), 
+	           inverseJoinColumns=@JoinColumn(name= "idHabilidade" ))
 	private List<Habilidade> habilidades;
 	
 	@Column
@@ -33,17 +48,20 @@ public class Evento {
 	@Column
 	private byte[] imagem;
 	
-	@Column
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
+	@OneToMany(mappedBy="evento")
 	private List<Geolocalizacao> geolocalizacoes;
 	
-	@Column
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
+	@OneToMany(mappedBy="evento")
 	private List<Presenca> presencas;
 	
-	@Column
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
+	@OneToMany(mappedBy="evento")
 	private List<Publicacao> publicacoes;
 	
-	@Column
-	private String tipo; //TODO DominioTipoEvento
+	@Enumerated(EnumType.STRING)
+	private DominioTipoEvento tipo; 
 	
 	@Column
 	private boolean isSugerido;
@@ -108,17 +126,17 @@ public class Evento {
 	public void setPublicacoes(List<Publicacao> publicacoes) {
 		this.publicacoes = publicacoes;
 	}
-	public String getTipo() {
-		return tipo;
-	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 	public boolean isSugerido() {
 		return isSugerido;
 	}
 	public void setSugerido(boolean isSugerido) {
 		this.isSugerido = isSugerido;
+	}
+	public DominioTipoEvento getTipo() {
+		return tipo;
+	}
+	public void setTipo(DominioTipoEvento tipo) {
+		this.tipo = tipo;
 	} 
 	
 }

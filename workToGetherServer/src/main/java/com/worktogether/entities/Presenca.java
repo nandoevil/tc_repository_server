@@ -3,17 +3,44 @@ package com.worktogether.entities;
 import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="presenca")
 public class Presenca {
 	
-	private Usuario usuario; 
-	private Evento evento;
-	private Date dataHora;
-	private String tipoPresenca; //TODO DominioTipoPresenca
+	@Id
+	@GeneratedValue
+	private Long id;
 	
+	@ManyToOne 
+	@JoinColumn(name="id")
+	private Usuario usuario;
+	
+	@ManyToOne 
+	@JoinColumn(name="id")
+	private Evento evento;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataHora;
+	
+	@Enumerated(EnumType.STRING)
+	private DominioTipoPresenca tipoPresenca; 
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -32,13 +59,11 @@ public class Presenca {
 	public void setDataHora(Date dataHora) {
 		this.dataHora = dataHora;
 	}
-	public String getTipoPresenca() {
+	public DominioTipoPresenca getTipoPresenca() {
 		return tipoPresenca;
 	}
-	public void setTipoPresenca(String tipoPresenca) {
+	public void setTipoPresenca(DominioTipoPresenca tipoPresenca) {
 		this.tipoPresenca = tipoPresenca;
 	}
-	
-	
 
 }
