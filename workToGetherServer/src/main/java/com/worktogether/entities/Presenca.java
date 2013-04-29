@@ -1,11 +1,13 @@
 package com.worktogether.entities;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,15 +20,15 @@ import javax.persistence.TemporalType;
 public class Presenca {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@ManyToOne 
-	@JoinColumn(name="id")
+	@JoinColumn(name="idUsuario")
 	private Usuario usuario;
 	
 	@ManyToOne 
-	@JoinColumn(name="id")
+	@JoinColumn(name="idEvento")
 	private Evento evento;
 	
 	@Temporal(TemporalType.TIMESTAMP)

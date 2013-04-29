@@ -2,10 +2,13 @@ package com.worktogether.webService;
 
 import java.util.List;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
+import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.entities.Convite;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
@@ -16,12 +19,17 @@ import com.worktogether.entities.Usuario;
 @Path("/worktogetherresource")
 public class WSWorkTogetherResource {
 	
-	@GET
+	private GerenciaUsuario gru = new GerenciaUsuario();
+	
+	@POST
 	@Path("/validarEmail")
-	@Produces("application/json")
-	public String validarEmail(){return "Hello!!!!";} 
-	
-	
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public String validarEmail(String email){
+		
+		return gru.isEmailExistente(email);
+			
+	} 
 	
 	public List<Evento> cadastrarUsuario(Usuario usuario){return null;} 
 	public void cadastrarEvento(Evento evento){} 

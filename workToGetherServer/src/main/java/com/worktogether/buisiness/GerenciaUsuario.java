@@ -12,8 +12,9 @@ public class GerenciaUsuario {
 	public List<Evento> cadastrarUsuario(Usuario usuario){
 		return null;
 	} 
-	public boolean isEmailExistente(String email){
-		return false;
+	public String isEmailExistente(String email){
+		
+		return "Usuário já cadastrado no sistema";
 	} 
 	public List<Evento> sugerirEventosUsuario(Usuario usuario){
 		return null;
