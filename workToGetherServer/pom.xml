@@ -9,6 +9,24 @@
   <name>workToGetherServer Maven Webapp</name>
   <url>http://maven.apache.org</url>
   
+  	<repositories>
+        <repository>
+            <id>jboss-repository</id>
+            <name>JBoss Repository</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jboss-repository2</id>
+            <name>JBoss Repository 2</name>
+            <url>http://repository.jboss.org/maven2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mvn-repository</id>
+            <name>MVN Repository</name>
+            <url>http://mvnrepository.com/artifact/</url>
+        </repository>
+    </repositories>
     
     <properties>
 		<jboss.as.version>7.1.1.Final</jboss.as.version>
@@ -75,7 +93,13 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
-
+		
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.6</version>
+		  </dependency>
+  
 	</dependencies>
     
     <build>

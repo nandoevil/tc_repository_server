@@ -1,37 +1,27 @@
 package com.worktogether.entities;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 @Entity
 @Table(name="usuario")
+@XmlRootElement
 public class Usuario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id; 
 	
-	@Column
+	@Column(name="nome")
 	private String nome;
 	
-	@Column
+	/*@Column
 	private String apelido;
 	
 	@Column
@@ -80,14 +70,14 @@ public class Usuario {
 	}
 	public void setDataHora(Date dataHora) {
 		this.dataHora = dataHora;
-	}
+	}*/
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getApelido() {
+	/*public String getApelido() {
 		return apelido;
 	}
 	public void setApelido(String apelido) {
@@ -146,6 +136,6 @@ public class Usuario {
 	}
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
-	} 
+	}*/ 
 	
 }

@@ -4,15 +4,25 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
-    <persistence-unit name="petitPersistence">
+    <persistence-unit name="WT-PU">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        
+        <class>com.worktogether.entities.Usuario</class>
+        <class>com.worktogether.entities.Presenca</class>
+        <class>com.worktogether.entities.Habilidade</class>
+        <class>com.worktogether.entities.Evento</class>
+        <class>com.worktogether.entities.Publicacao</class>
+        <class>com.worktogether.entities.Geolocalizacao</class>
    
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="none"/>
+            
+            <property name="hibernate.show_sql" value="true" />
+  			<property name="hibernate.format_sql" value="true" />
 
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/petit"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/applicationDatabase"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
         </properties>

@@ -23,15 +23,26 @@ public class WSWorkTogetherResource {
 	
 	@POST
 	@Path("/validarEmail")
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public String validarEmail(String email){
 		
 		return gru.isEmailExistente(email);
 			
 	} 
 	
-	public List<Evento> cadastrarUsuario(Usuario usuario){return null;} 
+	@POST
+	@Path("/cadastrarUsuario")
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<Evento> cadastrarUsuario(Usuario usuario){
+		
+		gru.cadastrarUsuario(usuario);
+		
+		return null;
+		
+	} 
+	
 	public void cadastrarEvento(Evento evento){} 
 	public String autenticarUsuario(Usuario usuario){return null;} 
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 

@@ -23,7 +23,6 @@ public class PersistenceFactory {
 	}
 	
 	public void persist(Object e){
-		em.merge(e);
 		em.persist(e);
 	}
 	
