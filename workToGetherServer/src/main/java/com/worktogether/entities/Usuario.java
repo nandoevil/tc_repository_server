@@ -1,11 +1,20 @@
 package com.worktogether.entities;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
@@ -30,12 +39,16 @@ public class Usuario {
 	@Column
 	private String email;
 	
-	@OneToMany 
-	@JoinColumn(name="idEvento")
+	@OneToMany
+	@JoinTable(name= "usuario_habilidade" ,
+	joinColumns=@JoinColumn(name= "id_usuario" ),
+	inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
 	private List<Habilidade> habilidades;
 	
-	@OneToMany 
-	@JoinColumn(name="idEvento")
+	@OneToMany
+	@JoinTable(name= "usuario_evento" ,
+	joinColumns=@JoinColumn(name= "id_usuario" ),
+	inverseJoinColumns=@JoinColumn(name= "id_evento" ))
 	private List<Evento> eventos;
 	
 	@Column
@@ -57,7 +70,7 @@ public class Usuario {
 	private byte[] imagem;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataHora;
+	private Date dataHora;*/
 	
 	public Long getId() {
 		return id;
@@ -65,7 +78,7 @@ public class Usuario {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Date getDataHora() {
+	/*public Date getDataHora() {
 		return dataHora;
 	}
 	public void setDataHora(Date dataHora) {
@@ -136,6 +149,6 @@ public class Usuario {
 	}
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
-	}*/ 
+	} */
 	
 }

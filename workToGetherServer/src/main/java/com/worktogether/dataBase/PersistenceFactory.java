@@ -7,26 +7,27 @@ import javax.persistence.Persistence;
 
 public class PersistenceFactory {
 	
-	private static PersistenceFactory instance;
-	private static EntityManagerFactory emf;
-	private static EntityManager em;
+	private EntityManagerFactory emf;
+	private EntityManager em;
 	
-	public static final PersistenceFactory instance(){
+	public PersistenceFactory(){
 		
-		if(instance == null){
-			instance = new PersistenceFactory();
-			emf = Persistence.createEntityManagerFactory("WT-PU");
-			em = emf.createEntityManager();
-		}
+		this.emf = Persistence.createEntityManagerFactory("WT-PU");
+		this.em = emf.createEntityManager();
 		
-		return instance;
 	}
 	
 	public void persist(Object e){
 		em.persist(e);
+		this.close();
 	}
 	
 	public void delete(Object e){
 		em.remove(e);
+	}
+	
+	private void close(){
+		this.em.close();
+		this.emf.close();
 	}
 }

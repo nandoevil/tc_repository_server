@@ -2,11 +2,16 @@ package com.worktogether.webService;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
+import org.jboss.resteasy.spi.HttpResponse;
 
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.entities.Convite;
@@ -19,7 +24,11 @@ import com.worktogether.entities.Usuario;
 @Path("/worktogetherresource")
 public class WSWorkTogetherResource {
 	
-	private GerenciaUsuario gru = new GerenciaUsuario();
+	@Context 
+	HttpResponse response;
+	
+	@Inject
+	GerenciaUsuario gru;
 	
 	@POST
 	@Path("/validarEmail")
@@ -41,6 +50,14 @@ public class WSWorkTogetherResource {
 		
 		return null;
 		
+	}
+	
+	@GET
+	@Path("/test")
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public Integer test() {
+		return 1;
 	} 
 	
 	public void cadastrarEvento(Evento evento){} 
