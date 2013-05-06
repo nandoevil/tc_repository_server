@@ -26,7 +26,7 @@ public class Geolocalizacao {
 	private Long id;
 	
 	@ManyToOne 
-	@JoinColumn(name="idEvento")
+	@JoinColumn(name="id_evento")
 	private Evento evento;
 	
 	@Enumerated(EnumType.STRING)
@@ -36,7 +36,10 @@ public class Geolocalizacao {
 	private BigDecimal raio;
 	
 	@Column
-	private String localizacao;
+	private BigDecimal latitude;
+	
+	@Column
+	private BigDecimal longitude;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
@@ -59,12 +62,6 @@ public class Geolocalizacao {
 	public void setRaio(BigDecimal raio) {
 		this.raio = raio;
 	}
-	public String getLocalizacao() {
-		return localizacao;
-	}
-	public void setLocalizacao(String localizacao) {
-		this.localizacao = localizacao;
-	}
 	public DominioTipoGeolocalizacao getTipo() {
 		return tipo;
 	}
@@ -76,6 +73,18 @@ public class Geolocalizacao {
 	}
 	public void setEvento(Evento evento) {
 		this.evento = evento;
+	}
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
 	} 
 	
 }

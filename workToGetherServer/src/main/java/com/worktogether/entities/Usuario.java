@@ -30,7 +30,7 @@ public class Usuario {
 	@Column(name="nome")
 	private String nome;
 	
-	/*@Column
+	@Column
 	private String apelido;
 	
 	@Column
@@ -70,7 +70,7 @@ public class Usuario {
 	private byte[] imagem;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataHora;*/
+	private Date dataHora;
 	
 	public Long getId() {
 		return id;
@@ -78,19 +78,19 @@ public class Usuario {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	/*public Date getDataHora() {
+	public Date getDataHora() {
 		return dataHora;
 	}
 	public void setDataHora(Date dataHora) {
 		this.dataHora = dataHora;
-	}*/
+	}
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	/*public String getApelido() {
+	public String getApelido() {
 		return apelido;
 	}
 	public void setApelido(String apelido) {
@@ -149,6 +149,6 @@ public class Usuario {
 	}
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
-	} */
+	} 
 	
 }

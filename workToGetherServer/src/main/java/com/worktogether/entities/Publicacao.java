@@ -34,11 +34,11 @@ public class Publicacao {
 	private String comentario;
 	
 	@ManyToOne 
-	@JoinColumn(name="idEvento")
+	@JoinColumn(name="id_evento")
 	private Evento evento;
 	
 	@ManyToOne 
-	@JoinColumn(name="idUsuario")
+	@JoinColumn(name="id_usuario")
 	private Usuario usuario;
 	
 	@Temporal(TemporalType.TIMESTAMP)

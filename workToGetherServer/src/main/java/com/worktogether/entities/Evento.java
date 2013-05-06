@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -30,12 +31,6 @@ public class Evento {
 	
 	@Column
 	private String descricao;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataHora;
-	
-	@Column
-	private String situacao;
 	
 	@OneToMany
 	@JoinTable(name="eventoHabilidade", 
@@ -64,8 +59,14 @@ public class Evento {
 	@Enumerated(EnumType.STRING)
 	private DominioTipoEvento tipo; 
 	
-	@Column
+	@Transient
 	private boolean isSugerido;
+	
+	@Column
+	private String situacao;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataHora;
 	
 	public Long getId() {
 		return id;

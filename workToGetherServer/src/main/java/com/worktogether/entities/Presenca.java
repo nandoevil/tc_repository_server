@@ -24,11 +24,11 @@ public class Presenca {
 	private Long id;
 	
 	@ManyToOne 
-	@JoinColumn(name="idUsuario")
+	@JoinColumn(name="id_usuario")
 	private Usuario usuario;
 	
 	@ManyToOne 
-	@JoinColumn(name="idEvento")
+	@JoinColumn(name="id_evento")
 	private Evento evento;
 	
 	@Temporal(TemporalType.TIMESTAMP)
