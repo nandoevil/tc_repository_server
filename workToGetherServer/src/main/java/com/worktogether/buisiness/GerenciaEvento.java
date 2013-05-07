@@ -2,15 +2,30 @@ package com.worktogether.buisiness;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import com.worktogether.entities.Convite;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Geolocalizacao;
 import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
 
+@Stateless
 public class GerenciaEvento {
 	
-	private void cadastrarEvento(Evento evento){} 
+	@PersistenceContext
+	private EntityManager em;
+	
+	public void cadastrarEvento(Evento evento){
+		this.persist(evento);
+	} 
+	
+	private void persist(Evento evento) {
+		em.persist(evento);
+	}
+	
 	private void vincularUsuarioEvento(Usuario usuario, List<Evento> eventos){} 
 	private void validarRaio(Geolocalizacao geoLocalizacao, String localizacaoAtual){} 
 	private void validarConfirmacaoPresenca(Evento evento, String localizacaoAtual){} 

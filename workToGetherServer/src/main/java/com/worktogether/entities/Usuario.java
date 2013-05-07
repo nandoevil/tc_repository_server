@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -39,23 +41,23 @@ public class Usuario {
 	@Column
 	private String email;
 	
-	@OneToMany
+	@ManyToMany
 	@JoinTable(name= "usuario_habilidade" ,
 	joinColumns=@JoinColumn(name= "id_usuario" ),
 	inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
 	private List<Habilidade> habilidades;
 	
-	@OneToMany
+	@ManyToMany
 	@JoinTable(name= "usuario_evento" ,
 	joinColumns=@JoinColumn(name= "id_usuario" ),
 	inverseJoinColumns=@JoinColumn(name= "id_evento" ))
 	private List<Evento> eventos;
 	
 	@Column
-	private Long senha;
+	private String senha;
 	
 	@OneToMany 
-	@JoinColumn(name="idEvento")
+	@JoinColumn(name="id_usuario")
 	private List<Presenca> presencas;
 	
 	@Column
@@ -63,10 +65,10 @@ public class Usuario {
 	
 	
 	@OneToMany 
-	@JoinColumn(name="idEvento")
+	@JoinColumn(name="id_usuario") //TODO Nao sei se esta certo
 	private List<Publicacao> publicacoes; 
 	
-	@Column
+	@Lob
 	private byte[] imagem;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -120,10 +122,11 @@ public class Usuario {
 	public void setEventos(List<Evento> eventos) {
 		this.eventos = eventos;
 	}
-	public Long getSenha() {
+	
+	public String getSenha() {
 		return senha;
 	}
-	public void setSenha(Long senha) {
+	public void setSenha(String senha) {
 		this.senha = senha;
 	}
 	public List<Presenca> getPresencas() {

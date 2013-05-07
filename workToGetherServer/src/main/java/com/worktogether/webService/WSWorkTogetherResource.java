@@ -1,5 +1,6 @@
 package com.worktogether.webService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.spi.HttpResponse;
 
+import com.worktogether.buisiness.GerenciaEvento;
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.entities.Convite;
 import com.worktogether.entities.Evento;
@@ -30,6 +32,9 @@ public class WSWorkTogetherResource {
 	@Inject
 	GerenciaUsuario gru;
 	
+	@Inject
+	GerenciaEvento gre;
+	
 	@POST
 	@Path("/validarEmail")
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -42,13 +47,10 @@ public class WSWorkTogetherResource {
 	
 	@POST
 	@Path("/cadastrarUsuario")
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<Evento> cadastrarUsuario(Usuario usuario){
-		
-		gru.cadastrarUsuario(usuario);
-		
-		return null;
+		return gru.cadastrarUsuario(usuario);
 		
 	}
 	
@@ -60,8 +62,22 @@ public class WSWorkTogetherResource {
 		return 1;
 	} 
 	
-	public void cadastrarEvento(Evento evento){} 
-	public String autenticarUsuario(Usuario usuario){return null;} 
+	@POST
+	@Path("/cadastrarEvento")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public void cadastrarEvento(Evento evento){
+		gre.cadastrarEvento(evento);
+	} 
+	
+	@POST
+	@Path("/autenticarUsuario")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public String autenticarUsuario(Usuario usuario){
+		return gru.autenticarUsuario(usuario);
+	} 
+	
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public List<Usuario> buscarRankingUsuario(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public String publicar(Publicacao publicacao){return null;} 

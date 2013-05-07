@@ -12,17 +12,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name="evento")
+@XmlRootElement
 public class Evento {
 	
 	@Id
@@ -32,11 +33,15 @@ public class Evento {
 	@Column
 	private String descricao;
 	
-	@OneToMany
-	@JoinTable(name="eventoHabilidade", 
-	           joinColumns= @JoinColumn(name= "idEvento" ), 
-	           inverseJoinColumns=@JoinColumn(name= "idHabilidade" ))
+	@ManyToMany
+	@JoinTable(name="evento_habilidade", 
+	           joinColumns= @JoinColumn(name= "id_evento" ), 
+	           inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
 	private List<Habilidade> habilidades;
+	
+	@OneToOne
+	@JoinColumn(name="id_usuario")
+	private Usuario usuario;
 	
 	@Column
 	private String objetivo;
@@ -44,16 +49,16 @@ public class Evento {
 	@Column
 	private byte[] imagem;
 	
-	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
-	@OneToMany(mappedBy="evento")
+	@OneToMany
+	@JoinColumn(name="id_evento")
 	private List<Geolocalizacao> geolocalizacoes;
 	
-	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
-	@OneToMany(mappedBy="evento")
+	@OneToMany
+	@JoinColumn(name="id_evento")
 	private List<Presenca> presencas;
 	
-	@Cascade({CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DELETE})
-	@OneToMany(mappedBy="evento")
+	@OneToMany
+	@JoinColumn(name="id_evento")
 	private List<Publicacao> publicacoes;
 	
 	@Enumerated(EnumType.STRING)
@@ -139,6 +144,14 @@ public class Evento {
 	}
 	public void setTipo(DominioTipoEvento tipo) {
 		this.tipo = tipo;
+	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	} 
+	
+	
 	
 }
