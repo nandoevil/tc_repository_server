@@ -1,6 +1,5 @@
 package com.worktogether.webService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,9 +38,11 @@ public class WSWorkTogetherResource {
 	@Path("/validarEmail")
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public String validarEmail(String email){
+	public WSReturn validarEmail(String email){
 		
-		return gru.isEmailExistente(email);
+		WSReturn a = gru.isEmailExistente(email);
+		
+		return a;
 			
 	} 
 	

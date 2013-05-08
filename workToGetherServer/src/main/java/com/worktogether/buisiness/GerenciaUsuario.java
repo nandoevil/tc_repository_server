@@ -10,6 +10,7 @@ import javax.persistence.TypedQuery;
 
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Usuario;
+import com.worktogether.webService.WSReturn;
 
 @Stateless
 public class GerenciaUsuario {
@@ -27,25 +28,28 @@ public class GerenciaUsuario {
 	} 
 	
 	
-	public String isEmailExistente(String email){
+	public WSReturn isEmailExistente(String email){
+		WSReturn wr = new WSReturn();
 		try{
-			
 			if(email == null || "".equalsIgnoreCase(email)){
-				return "Parâmetro inválido para validação do email";
+				wr.setValue("Parâmetro inválido para validação do email");
 			}
 			
 			TypedQuery<Usuario> qry = em.createQuery("select u from Usuario u where u.email = ?1", Usuario.class);
 			qry.setParameter(1, email.trim());
 			Usuario u = qry.getSingleResult();
 			
-			 return "Email já cadastrado no sistema";
+			 wr.setValue("Email já cadastrado");
+			 
+			 return wr;
 			
 		}catch(NoResultException e){
-			return DominioStatusRequsicao.SUCESS.toString();
+			wr.setValue(DominioStatusRequsicao.SUCESS.toString());
+			return wr;
 			
 		}catch(Throwable e){
-			return DominioStatusRequsicao.SERVER_ERROR.toString();
-			
+			wr.setValue(DominioStatusRequsicao.SERVER_ERROR.toString());
+			return wr;
 		}
 	}
 	
