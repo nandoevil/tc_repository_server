@@ -35,13 +35,13 @@ public class Geolocalizacao {
 	private DominioTipoGeolocalizacao tipo; 
 	
 	@Column
-	private BigDecimal raio;
+	private double raio;
 	
 	@Column
-	private BigDecimal latitude;
+	private double latitude;
 	
 	@Column
-	private BigDecimal longitude;
+	private double longitude;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
@@ -58,12 +58,6 @@ public class Geolocalizacao {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public BigDecimal getRaio() {
-		return raio;
-	}
-	public void setRaio(BigDecimal raio) {
-		this.raio = raio;
-	}
 	public DominioTipoGeolocalizacao getTipo() {
 		return tipo;
 	}
@@ -76,17 +70,24 @@ public class Geolocalizacao {
 	public void setEvento(Evento evento) {
 		this.evento = evento;
 	}
-	public BigDecimal getLatitude() {
+	public double getRaio() {
+		return raio;
+	}
+	public void setRaio(double raio) {
+		this.raio = raio;
+	}
+	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(BigDecimal latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	public BigDecimal getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(BigDecimal longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-	} 
+	}
+	
 	
 }

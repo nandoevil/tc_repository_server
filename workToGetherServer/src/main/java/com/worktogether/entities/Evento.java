@@ -31,6 +31,9 @@ public class Evento {
 	private Long id;
 	
 	@Column
+	private String nome;
+	
+	@Column
 	private String descricao;
 	
 	@ManyToMany
@@ -64,14 +67,17 @@ public class Evento {
 	@Enumerated(EnumType.STRING)
 	private DominioTipoEvento tipo; 
 	
-	@Transient
-	private boolean isSugerido;
-	
 	@Column
 	private String situacao;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
+	
+	@Column
+	private double sugerido;
+	
+	@Column
+	private Long colocacao;
 	
 	public Long getId() {
 		return id;
@@ -133,12 +139,6 @@ public class Evento {
 	public void setPublicacoes(List<Publicacao> publicacoes) {
 		this.publicacoes = publicacoes;
 	}
-	public boolean isSugerido() {
-		return isSugerido;
-	}
-	public void setSugerido(boolean isSugerido) {
-		this.isSugerido = isSugerido;
-	}
 	public DominioTipoEvento getTipo() {
 		return tipo;
 	}
@@ -150,8 +150,24 @@ public class Evento {
 	}
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	} 
-	
-	
-	
+	}
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public double getSugerido() {
+		return sugerido;
+	}
+	public void setSugerido(double sugerido) {
+		this.sugerido = sugerido;
+	}
+	public Long getColocacao() {
+		return colocacao;
+	}
+	public void setColocacao(Long colocacao) {
+		this.colocacao = colocacao;
+	}
+
 }

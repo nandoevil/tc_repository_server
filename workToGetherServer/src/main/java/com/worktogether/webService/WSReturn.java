@@ -5,6 +5,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class WSReturn {
 	
+	
+	private Object entity;
 	private Object value;
 	
 	public WSReturn(){
@@ -20,7 +22,14 @@ public class WSReturn {
 	public void setValue(Object value) {
 		this.value = value;
 	}
-	
+
+	public Object getEntity() {
+		return entity;
+	}
+
+	public void setEntity(Object entity) {
+		this.entity = entity;
+	}
 	
 
 }

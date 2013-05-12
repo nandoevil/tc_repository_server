@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -50,25 +49,16 @@ public class WSWorkTogetherResource {
 	@Path("/cadastrarUsuario")
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public List<Evento> cadastrarUsuario(Usuario usuario){
+	public Long cadastrarUsuario(Usuario usuario){
 		return gru.cadastrarUsuario(usuario);
-		
 	}
-	
-	@GET
-	@Path("/test")
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public Integer test() {
-		return 1;
-	} 
 	
 	@POST
 	@Path("/cadastrarEvento")
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public void cadastrarEvento(Evento evento){
-		gre.cadastrarEvento(evento);
+	public Long cadastrarEvento(Evento evento){
+		return gre.cadastrarEvento(evento);
 	} 
 	
 	@POST
@@ -79,6 +69,14 @@ public class WSWorkTogetherResource {
 		return gru.autenticarUsuario(usuario);
 	} 
 	
+	@POST
+	@Path("/buscarEventosSugeridos")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<Evento> buscarEventosSugeridos(Usuario usuario) {
+		return gru.buscarEventosSugeridos(usuario);
+	}
+	
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public List<Usuario> buscarRankingUsuario(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public String publicar(Publicacao publicacao){return null;} 
@@ -88,6 +86,10 @@ public class WSWorkTogetherResource {
 	public List<Habilidade> buscarHabilidades(Long inicio, Long fiim){return null;} 
 	public String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){return null;} 
 	public String confirmarPresenca(Presenca presencao, String localizacaoAtual){return null;} 
-	public List<Evento> verificarAtualizacaoEventos(Long idUltimoEvento){return null;} 
+	
+	public List<Evento> verificarAtualizacaoEventos(Long idUsuario){
+		return null;
+		
+	} 
 
 }

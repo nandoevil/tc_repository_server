@@ -18,13 +18,22 @@ public class GerenciaEvento {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public void cadastrarEvento(Evento evento){
-		this.persist(evento);
+	public Long cadastrarEvento(Evento evento){
+		
+		Evento e = em.merge(evento);
+		Long id = e.getId();
+		
+		List<Geolocalizacao> list = e.getGeolocalizacoes();
+		
+		for (Geolocalizacao geolocalizacao : list) {
+			geolocalizacao.setEvento(e);
+			em.persist(geolocalizacao);
+		}
+		
+		em.persist(e);
+		
+		return id;
 	} 
-	
-	private void persist(Evento evento) {
-		em.persist(evento);
-	}
 	
 	private void vincularUsuarioEvento(Usuario usuario, List<Evento> eventos){} 
 	private void validarRaio(Geolocalizacao geoLocalizacao, String localizacaoAtual){} 

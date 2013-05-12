@@ -1,5 +1,7 @@
 package com.worktogether.buisiness;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import com.worktogether.entities.DominioTipoEvento;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Usuario;
 import com.worktogether.webService.WSReturn;
@@ -20,11 +23,14 @@ public class GerenciaUsuario {
 	
 	public void validarDadosUsuario(Usuario usuario){} 
 	
-	public List<Evento> cadastrarUsuario(Usuario usuario) {
+	public Long cadastrarUsuario(Usuario usuario) {
 		
-		this.persist(usuario);
+		Usuario u = em.merge(usuario);
+		Long id = u.getId();
 		
-		return this.buscarEventosSugeridos(usuario);
+		em.persist(u);
+		
+		return id;
 	} 
 	
 	
@@ -61,10 +67,24 @@ public class GerenciaUsuario {
 				return null;
 			}
 			
-			//TODO LOGICA PARA EVENTOS SUGERIDOS
-			TypedQuery<Evento> qry = em.createQuery("select e from Usuario e", Evento.class);
+			/*//TODO LOGICA PARA EVENTOS SUGERIDOS
+			TypedQuery<Evento> qry = em.createQuery("select e from Evento e", Evento.class);
 			//qry.setParameter(1, email.trim());
-			List<Evento> list = qry.getResultList();
+			List<Evento> list = qry.getResultList();*/
+			
+			List<Evento> list = new ArrayList<Evento>();
+			
+			Evento e = new Evento();
+			e.setId(new Long(1));
+			e.setDescricao("Estudo");
+			e.setNome("Novo Evento");
+			e.setObjetivo("Novo");
+			e.setSituacao("Ativo");
+			e.setDataHora(new Date());
+			e.setTipo(DominioTipoEvento.ESTUDO);
+			e.setSugerido(0d);
+			
+			list.add(e);
 			
 			return list;
 			
@@ -122,10 +142,6 @@ public class GerenciaUsuario {
 	public Usuario update(Usuario usuario) {
 
 		return em.merge(usuario);
-	}
-	
-	public void persist(Usuario usuario) {
-		em.persist(usuario);
 	}
 	
 	public void remove(int id) {
