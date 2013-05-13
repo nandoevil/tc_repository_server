@@ -1,7 +1,5 @@
 package com.worktogether.webService;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -9,7 +7,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -17,8 +14,8 @@ import org.jboss.resteasy.spi.HttpResponse;
 
 import com.worktogether.buisiness.GerenciaEvento;
 import com.worktogether.buisiness.GerenciaUsuario;
+import com.worktogether.dto.EventoDTO;
 import com.worktogether.entities.Convite;
-import com.worktogether.entities.DominioTipoEvento;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
@@ -77,15 +74,16 @@ public class WSWorkTogetherResource {
 	@Path("/buscarEventosSugeridos")
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public List<Evento> buscarEventosSugeridos(Usuario usuario) {
-		return gre.buscarEventosSugeridos(usuario);
+	public List<EventoDTO> buscarEventosSugeridos(Usuario usuario) {
+		List<EventoDTO> list = gre.buscarEventosSugeridos(usuario);
+		return list;
 	}
 	
 	@POST
 	@Path("/buscarEventos")
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public List<Evento> buscarEventos(Usuario usuario){
+	public List<EventoDTO> buscarEventos(Usuario usuario){
 		return gre.buscarEventos(usuario);
 	} 
 	

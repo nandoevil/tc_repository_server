@@ -1,7 +1,6 @@
 package com.worktogether.buisiness;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,10 +10,12 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.worktogether.dto.EventoDTO;
+import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.entities.Convite;
-import com.worktogether.entities.DominioTipoEvento;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Geolocalizacao;
+import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
 
@@ -41,7 +42,7 @@ public class GerenciaEvento {
 		return id;
 	} 
 	
-	public List<Evento> buscarEventos(Usuario usuario){
+	public List<EventoDTO> buscarEventos(Usuario usuario){
 		//TODO REMOVER
 		List<Evento> listteste = new ArrayList<Evento>();
 		Evento ev = new Evento();
@@ -54,6 +55,8 @@ public class GerenciaEvento {
 		
 		usuario.setEventos(listteste);
 			
+		//PEGA OS EVENTOS QUE O USUARIO ESTA VISUALIZANDO E CRIA UMA STRING
+		//COM OS IDS PARA SER ENVIADO COM PARAMETRO A PROCEDURE
 		List<Evento> list = usuario.getEventos();
 		StringBuilder eventoIds = new StringBuilder();
 		
@@ -70,26 +73,49 @@ public class GerenciaEvento {
 			}
 		}
 		
+		//CHAMADA DA PROCEDURE SP_SUGERIR_EVENTOS PARA TODOS OS EVENTOS
 		Session session = (Session) em.getDelegate();
 		Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
-		/*query.setParameter("id_evento_list", eventoIds.toString());
+		query.setParameter("id_evento_list", eventoIds.toString());
 		query.setParameter("id_usuario", usuario.getId());
-		query.setParameter("visualizacao", new Long(1));*/
+		query.setParameter("visualizacao", new Long(1));
 		
 		query.setParameter("id_evento_list", eventoIds.toString());
 		query.setParameter("id_usuario", usuario.getId());
 		query.setParameter("visualizacao", new Long(1));
 		
-		List eventoList = query.list();
-		List<Evento> retornoList = new ArrayList<Evento>();
+		List<Evento> eventoList = (List<Evento>) query.list();
+		List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
 		
 		for (int i=0, t = eventoList.size(); i < t; i++) {
-			Evento e = (Evento) eventoList.get(i);
-			e.getHabilidades();
-			e.getPresencas();
-			e.getGeolocalizacoes();
-			e.getPublicacoes();
-			retornoList.add(e);
+			Evento entity = (Evento) eventoList.get(i);
+			EventoDTO dto = new EventoDTO();
+			
+			dto.setId(entity.getId());
+			dto.setNome(entity.getNome());
+			dto.setDataHora(entity.getDataHora().getTime());
+			dto.setColocacao(entity.getColocacao());
+			dto.setDescricao(entity.getDescricao());
+			dto.setObjetivo(entity.getObjetivo());
+			dto.setImagem(entity.getImagem());
+			dto.setSugerido(entity.getSugerido());
+			
+			List<Habilidade> habilidadesEntity = entity.getHabilidades();
+			List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
+			
+			for (Habilidade habilidade : habilidadesEntity) {
+				HabilidadeDTO hDTO = new HabilidadeDTO();
+				
+				hDTO.setDescricao(habilidade.getDescricao());
+				hDTO.setId(habilidade.getId());
+				hDTO.setTipo(habilidade.getTipo());
+				
+				hlistDTO.add(hDTO);
+			}
+			
+			dto.setHabilidades(hlistDTO);
+			
+			retornoList.add(dto);
 		}
 		
 		return retornoList;
@@ -97,32 +123,75 @@ public class GerenciaEvento {
 	} 
 	
 	//TODO Verificar modelagem
-	public List<Evento> buscarEventosSugeridos(Usuario usuario) {
+	public List<EventoDTO> buscarEventosSugeridos(Usuario usuario) {
 		try{
 			
 			if(usuario == null || usuario.getHabilidades() == null || usuario.getHabilidades().size() == 0){
 				return null;
 			}
 			
-			/*//TODO LOGICA PARA EVENTOS SUGERIDOS
-			TypedQuery<Evento> qry = em.createQuery("select e from Evento e", Evento.class);
-			qry.setParameter(1, email.trim());
-			List<Evento> list = qry.getResultList();*/
+			//PEGA OS EVENTOS QUE O USUARIO ESTA VISUALIZANDO E CRIA UMA STRING
+			//COM OS IDS PARA SER ENVIADO COM PARAMETRO A PROCEDURE
+			List<Evento> list = usuario.getEventos();
+			StringBuilder eventoIds = new StringBuilder();
 			
-			List<Evento> list = new ArrayList<Evento>();
-			Evento e = new Evento();
-			e.setId(new Long(1));
-			e.setDescricao("Estudo");
-			e.setNome("Novo Evento");
-			e.setObjetivo("Novo");
-			e.setSituacao("Ativo");
-			e.setDataHora(new Date());
-			e.setTipo(DominioTipoEvento.ESTUDO);
-			e.setSugerido(0d);
+			if(list != null && list.size() > 0){
+				int size = list.size();
+				
+				for (int i=0, s = size; i < size; i++) {
+					eventoIds.append(list.get(i).getId());
+					
+					if(i != size - 1){
+						eventoIds.append(";");
+					}
+					
+				}
+			}
 			
-			list.add(e);
+			//CHAMADA DA PROCEDURE SP_SUGERIR_EVENTOS PARA APENAS EVENTOS SUGERIDOS
+			Session session = (Session) em.getDelegate();
+			Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
+			query.setParameter("id_evento_list", eventoIds.toString());
+			query.setParameter("id_usuario", usuario.getId());
+			query.setParameter("visualizacao", new Long(1));
 			
-			return list;
+			query.setParameter("id_evento_list", eventoIds.toString());
+			query.setParameter("id_usuario", usuario.getId());
+			query.setParameter("visualizacao", new Long(0));
+			
+			List<Evento> eventoList = (List<Evento>) query.list();
+			List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
+			
+			for (int i=0, t = eventoList.size(); i < t; i++) {
+				Evento entity = (Evento) eventoList.get(i);
+				EventoDTO dto = new EventoDTO();
+				
+				dto.setId(entity.getId());
+				dto.setNome(entity.getNome());
+				dto.setDataHora(entity.getDataHora().getTime());
+				dto.setColocacao(entity.getColocacao());
+				dto.setDescricao(entity.getDescricao());
+				dto.setObjetivo(entity.getObjetivo());
+				dto.setImagem(entity.getImagem());
+				dto.setSugerido(entity.getSugerido());
+				
+				List<Habilidade> hlist = entity.getHabilidades();
+				List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
+				
+				for (Habilidade habilidade : hlist) {
+					HabilidadeDTO hDTO = new HabilidadeDTO();
+					
+					hDTO.setDescricao(habilidade.getDescricao());
+					hDTO.setId(habilidade.getId());
+					hDTO.setTipo(habilidade.getTipo());
+				}
+				
+				dto.setHabilidades(hlistDTO);
+				
+				retornoList.add(dto);
+			}
+			
+			return retornoList;
 			
 		}catch(Throwable e){
 			return null;
