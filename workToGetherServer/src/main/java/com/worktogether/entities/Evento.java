@@ -18,9 +18,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedNativeQuery;
+
+@NamedNativeQuery (callable= true, name ="callStoreProcedureEventosSugeridos", query ="call sp_eventos_sugeridos(:id_evento_list, :id_usuario)", resultClass = Evento.class)
 @Entity
 @Table(name="evento")
 @XmlRootElement

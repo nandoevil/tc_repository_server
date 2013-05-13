@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.QueryParam;
 
 import com.worktogether.entities.DominioTipoEvento;
 import com.worktogether.entities.Evento;
@@ -58,40 +59,6 @@ public class GerenciaUsuario {
 			return wr;
 		}
 	}
-	
-	//TODO Verificar modelagem
-	public List<Evento> buscarEventosSugeridos(Usuario usuario) {
-		try{
-			
-			if(usuario == null || usuario.getHabilidades() == null || usuario.getHabilidades().size() == 0){
-				return null;
-			}
-			
-			/*//TODO LOGICA PARA EVENTOS SUGERIDOS
-			TypedQuery<Evento> qry = em.createQuery("select e from Evento e", Evento.class);
-			//qry.setParameter(1, email.trim());
-			List<Evento> list = qry.getResultList();*/
-			
-			List<Evento> list = new ArrayList<Evento>();
-			
-			Evento e = new Evento();
-			e.setId(new Long(1));
-			e.setDescricao("Estudo");
-			e.setNome("Novo Evento");
-			e.setObjetivo("Novo");
-			e.setSituacao("Ativo");
-			e.setDataHora(new Date());
-			e.setTipo(DominioTipoEvento.ESTUDO);
-			e.setSugerido(0d);
-			
-			list.add(e);
-			
-			return list;
-			
-		}catch(Throwable e){
-			return null;
-		}
-	} 
 	
 	public List<Evento> sugerirEventosUsuario(Usuario usuario){
 		return null;
