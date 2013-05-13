@@ -86,11 +86,7 @@ public class WSWorkTogetherResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<Evento> buscarEventos(Usuario usuario){
-		
-		List<Evento> list = new ArrayList<Evento>();
-		gre.buscarEventos(usuario);
-		
-		return list;
+		return gre.buscarEventos(usuario);
 	} 
 	
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 

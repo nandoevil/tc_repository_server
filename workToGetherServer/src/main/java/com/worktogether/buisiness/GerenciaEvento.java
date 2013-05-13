@@ -42,29 +42,53 @@ public class GerenciaEvento {
 	} 
 	
 	public List<Evento> buscarEventos(Usuario usuario){
+		//TODO REMOVER
+		List<Evento> listteste = new ArrayList<Evento>();
+		Evento ev = new Evento();
+		ev.setId(new Long(1));
+		Evento ev2 = new Evento();
+		ev2.setId(new Long(2));
 		
+		listteste.add(ev);
+		listteste.add(ev2);
+		
+		usuario.setEventos(listteste);
+			
 		List<Evento> list = usuario.getEventos();
 		StringBuilder eventoIds = new StringBuilder();
 		
-		for (Evento evento : list) {
-			eventoIds.append(evento.getId());
-			eventoIds.append(";");
+		if(list != null && list.size() > 0){
+			int size = list.size();
+			
+			for (int i=0, s = size; i < size; i++) {
+				eventoIds.append(list.get(i).getId());
+				
+				if(i != size - 1){
+					eventoIds.append(";");
+				}
+				
+			}
 		}
 		
-		eventoIds.append("1;2");
-		usuario.setId(new Long(1));
-		
 		Session session = (Session) em.getDelegate();
-		
 		Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
+		/*query.setParameter("id_evento_list", eventoIds.toString());
+		query.setParameter("id_usuario", usuario.getId());
+		query.setParameter("visualizacao", new Long(1));*/
+		
 		query.setParameter("id_evento_list", eventoIds.toString());
 		query.setParameter("id_usuario", usuario.getId());
+		query.setParameter("visualizacao", new Long(1));
 		
 		List eventoList = query.list();
 		List<Evento> retornoList = new ArrayList<Evento>();
 		
 		for (int i=0, t = eventoList.size(); i < t; i++) {
 			Evento e = (Evento) eventoList.get(i);
+			e.getHabilidades();
+			e.getPresencas();
+			e.getGeolocalizacoes();
+			e.getPublicacoes();
 			retornoList.add(e);
 		}
 		
@@ -82,7 +106,7 @@ public class GerenciaEvento {
 			
 			/*//TODO LOGICA PARA EVENTOS SUGERIDOS
 			TypedQuery<Evento> qry = em.createQuery("select e from Evento e", Evento.class);
-			//qry.setParameter(1, email.trim());
+			qry.setParameter(1, email.trim());
 			List<Evento> list = qry.getResultList();*/
 			
 			List<Evento> list = new ArrayList<Evento>();
