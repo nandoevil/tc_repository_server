@@ -43,18 +43,6 @@ public class GerenciaEvento {
 	} 
 	
 	public List<EventoDTO> buscarEventos(Usuario usuario){
-		//TODO REMOVER
-		List<Evento> listteste = new ArrayList<Evento>();
-		Evento ev = new Evento();
-		ev.setId(new Long(1));
-		Evento ev2 = new Evento();
-		ev2.setId(new Long(2));
-		
-		listteste.add(ev);
-		listteste.add(ev2);
-		
-		usuario.setEventos(listteste);
-			
 		//PEGA OS EVENTOS QUE O USUARIO ESTA VISUALIZANDO E CRIA UMA STRING
 		//COM OS IDS PARA SER ENVIADO COM PARAMETRO A PROCEDURE
 		List<Evento> list = usuario.getEventos();
