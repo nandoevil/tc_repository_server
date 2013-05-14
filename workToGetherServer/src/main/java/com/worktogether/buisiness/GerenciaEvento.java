@@ -186,15 +186,19 @@ public class GerenciaEvento {
 		}
 	} 
 	
+	//TODO MODELAR
+	public void enviarConviteAutomatico(Usuario usuario, String localizacao){
+		
+		System.out.println(usuario.getId()+ " "+localizacao);
+	} 
+	
+	
 	private void vincularUsuarioEvento(Usuario usuario, List<Evento> eventos){} 
 	private void validarRaio(Geolocalizacao geoLocalizacao, String localizacaoAtual){} 
 	private void validarConfirmacaoPresenca(Evento evento, String localizacaoAtual){} 
 	private void salvarPresenca(Presenca presenca){} 
 	
 	
-	private List<Convite> enviarConviteAutomatico(Usuario usuario, String localizacao){
-		return null;
-	} 
 	private String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){
 		return null;
 	} 

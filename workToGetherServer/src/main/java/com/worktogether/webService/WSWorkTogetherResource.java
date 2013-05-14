@@ -7,6 +7,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
@@ -15,7 +16,6 @@ import org.jboss.resteasy.spi.HttpResponse;
 import com.worktogether.buisiness.GerenciaEvento;
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.dto.EventoDTO;
-import com.worktogether.entities.Convite;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
@@ -85,13 +85,20 @@ public class WSWorkTogetherResource {
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<EventoDTO> buscarEventos(Usuario usuario){
 		return gre.buscarEventos(usuario);
+	}
+	
+	//TODO MODELAR
+	@POST
+	@Path("/enviarConviteAutomatico")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public void enviarConviteAutomatico(Usuario usuario, @QueryParam("localizacao") String localizacao){
+		gre.enviarConviteAutomatico(usuario, localizacao);
 	} 
 	
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public List<Usuario> buscarRankingUsuario(Long colocacaoInicial, Long colocacaoFinal){return null;} 
 	public String publicar(Publicacao publicacao){return null;} 
 	
-	public List<Convite> enviarConviteAutomatico(Usuario usuario, String localizacao){return null;} 
 	public void indicarPresenca(List<Presenca> presencas){} 
 	public List<Habilidade> buscarHabilidades(Long inicio, Long fiim){return null;} 
 	public String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){return null;} 
