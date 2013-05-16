@@ -18,6 +18,7 @@ import com.worktogether.entities.Geolocalizacao;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
+import com.worktogether.gcm.GCMController;
 
 @Stateless
 public class GerenciaEvento {
@@ -143,10 +144,6 @@ public class GerenciaEvento {
 			query.setParameter("id_usuario", usuario.getId());
 			query.setParameter("visualizacao", new Long(1));
 			
-			query.setParameter("id_evento_list", eventoIds.toString());
-			query.setParameter("id_usuario", usuario.getId());
-			query.setParameter("visualizacao", new Long(0));
-			
 			List<Evento> eventoList = (List<Evento>) query.list();
 			List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
 			
@@ -187,9 +184,26 @@ public class GerenciaEvento {
 	} 
 	
 	//TODO MODELAR
-	public void enviarConviteAutomatico(Usuario usuario, String localizacao){
+	public void enviarConviteAutomatico(String usuarioInfo, String localizacao){
 		
-		System.out.println(usuario.getId()+ " "+localizacao);
+		if(usuarioInfo != null && !"".equalsIgnoreCase(usuarioInfo) && 
+		   localizacao != null && !"".equalsIgnoreCase(localizacao)){
+			
+			String[] latiLong = localizacao.split(";");
+			String[] ids = usuarioInfo.split(";");
+			
+			//CHAMADA DA PROCEDURE sp_localizar_eventos_sugeridos PARA APENAS EVENTOS SUGERIDOS
+			Session session = (Session) em.getDelegate();
+			Query query = session.getNamedQuery("callStoreProcedureEventosSugeridosGeo");
+			query.setParameter("id_usuario", ids[0]);
+			query.setParameter("latitudeA", latiLong[0]);
+			query.setParameter("longitudeA", latiLong[1]);
+			
+			List<Evento> eventoList = (List<Evento>) query.list();
+			for (Evento evento : eventoList) {
+				new Thread(new GCMController(ids[0], evento)).start();
+			}
+		}
 	} 
 	
 	

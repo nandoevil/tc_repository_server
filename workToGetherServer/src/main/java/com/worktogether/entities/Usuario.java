@@ -77,6 +77,9 @@ public class Usuario {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
 	
+	@Column
+	private String idGCM;
+	
 	public Long getId() {
 		return id;
 	}
@@ -155,6 +158,14 @@ public class Usuario {
 	}
 	public void setImagem(byte[] imagem) {
 		this.imagem = imagem;
+	}
+	public String getIdGCM() {
+		return idGCM;
+	}
+	public void setIdGCM(String idGCM) {
+		this.idGCM = idGCM;
 	} 
+	
+	
 	
 }

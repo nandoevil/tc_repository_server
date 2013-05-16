@@ -10,9 +10,18 @@ import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.worktogether.entities.Evento;
 
-public class GCMController {
+public class GCMController implements Runnable {
 	
-	public void enviarConvite(String idDispositivoGCM, Evento evento){
+	private String idDispositivoGCM;
+	private Evento evento;
+	
+	public GCMController(String idDispositivoGCM, Evento evento){
+		this.idDispositivoGCM = idDispositivoGCM;
+		this.evento = evento;
+	}
+	
+	@Override
+	public void run() {
 		try{
 			//Cria um objeto Sender usando a chave API do seu projeto
 			Sender sender = new Sender("AIzaSyBIre-L6i5efqqPalBaEF2TL5UmWWRj2KA");
@@ -22,7 +31,7 @@ public class GCMController {
 			//Montagem do convite
 			StringBuilder msg = new StringBuilder();
 			msg.append("Convite para o evento");
-			msg.append(evento.getNome());
+			msg.append(evento);
 			
 			Message message = builder.addData("convite", msg.toString()).build();
 			

@@ -1,6 +1,5 @@
 package com.worktogether.entities;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,7 +16,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedNativeQuery;
 
+@NamedNativeQuery (callable= true, name ="callStoreProcedureEventosSugeridosGeo", query ="call sp_localizar_eventos_sugeridos(:latitudeA, :longitudeA, :id_usuario)", resultClass = Evento.class)
 @Entity
 @Table(name="geolocalizacao")
 @XmlRootElement

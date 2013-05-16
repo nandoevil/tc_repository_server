@@ -20,6 +20,7 @@ public class UsuarioDTO {
 	private byte[] imagem;
 	private Date dataHora;
 	private Long colocacaoRanking;
+	private String idGCM;
 	
 	public Long getColocacaoRanking() {
 		return colocacaoRanking;
@@ -105,5 +106,13 @@ public class UsuarioDTO {
 	public void setEventos(List<EventoDTO> eventos) {
 		this.eventos = eventos;
 	}
+	public String getIdGCM() {
+		return idGCM;
+	}
+	public void setIdGCM(String idGCM) {
+		this.idGCM = idGCM;
+	}
+	
+	
 	
 }

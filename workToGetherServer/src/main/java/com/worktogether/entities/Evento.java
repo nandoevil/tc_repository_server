@@ -2,7 +2,6 @@ package com.worktogether.entities;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NamedNativeQuery;
 
 @NamedNativeQuery (callable= true, name ="callStoreProcedureEventosSugeridos", query ="call sp_eventos_sugeridos(:id_evento_list, :id_usuario, :visualizacao)", resultClass = Evento.class)

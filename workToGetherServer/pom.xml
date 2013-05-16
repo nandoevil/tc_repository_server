@@ -12,7 +12,7 @@
   <properties>
 		<jboss.as.version>7.1.1.Final</jboss.as.version>
 	</properties>
-
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -25,7 +25,15 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>
+	<dependencies> 
+		
+		<dependency>
+	        <groupId>com.google.android.gcm</groupId>
+	        <artifactId>gcm-server</artifactId>
+	        <version>1.0.2</version>
+ 		</dependency>
+	
+	
 		<!-- JBOSS AS -->
 		<dependency>
 			<groupId>org.jboss.as</groupId>
@@ -73,6 +81,13 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		
 
 	</dependencies>
 

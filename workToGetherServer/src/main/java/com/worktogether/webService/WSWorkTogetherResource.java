@@ -91,8 +91,8 @@ public class WSWorkTogetherResource {
 	@POST
 	@Path("/enviarConviteAutomatico")
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-	public void enviarConviteAutomatico(Usuario usuario, @QueryParam("localizacao") String localizacao){
-		gre.enviarConviteAutomatico(usuario, localizacao);
+	public void enviarConviteAutomatico(@QueryParam("usuarioInfo") String usuarioInfo, @QueryParam("localizacao") String localizacao){
+		gre.enviarConviteAutomatico(usuarioInfo, localizacao);
 	} 
 	
 	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 
