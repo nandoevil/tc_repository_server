@@ -19,9 +19,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 
 @Entity
 @Table(name="usuario")
@@ -76,6 +73,9 @@ public class Usuario {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
+	
+	@Column
+	private Long colocacaoRanking;
 	
 	@Column
 	private String idGCM;
@@ -164,8 +164,13 @@ public class Usuario {
 	}
 	public void setIdGCM(String idGCM) {
 		this.idGCM = idGCM;
+	}
+	public Long getColocacaoRanking() {
+		return colocacaoRanking;
+	}
+	public void setColocacaoRanking(Long colocacaoRanking) {
+		this.colocacaoRanking = colocacaoRanking;
 	} 
-	
 	
 	
 }

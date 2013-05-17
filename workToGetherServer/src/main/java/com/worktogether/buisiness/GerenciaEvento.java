@@ -82,7 +82,7 @@ public class GerenciaEvento {
 			
 			dto.setId(entity.getId());
 			dto.setNome(entity.getNome());
-			dto.setDataHora(entity.getDataHora().getTime());
+			dto.setDataHora(entity.getDataHora());
 			dto.setColocacao(entity.getColocacao());
 			dto.setDescricao(entity.getDescricao());
 			dto.setObjetivo(entity.getObjetivo());
@@ -115,7 +115,7 @@ public class GerenciaEvento {
 	public List<EventoDTO> buscarEventosSugeridos(Usuario usuario) {
 		try{
 			
-			if(usuario == null || usuario.getHabilidades() == null || usuario.getHabilidades().size() == 0){
+			if(usuario == null || usuario.getId() == null){
 				return null;
 			}
 			
@@ -153,7 +153,7 @@ public class GerenciaEvento {
 				
 				dto.setId(entity.getId());
 				dto.setNome(entity.getNome());
-				dto.setDataHora(entity.getDataHora().getTime());
+				dto.setDataHora(entity.getDataHora());
 				dto.setColocacao(entity.getColocacao());
 				dto.setDescricao(entity.getDescricao());
 				dto.setObjetivo(entity.getObjetivo());

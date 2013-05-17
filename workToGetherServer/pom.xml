@@ -13,6 +13,13 @@
 		<jboss.as.version>7.1.1.Final</jboss.as.version>
 	</properties>
 	
+	<repositories>
+		<repository>
+			<id>gcm-server-repository</id>
+			<url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+		</repository>
+	</repositories>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

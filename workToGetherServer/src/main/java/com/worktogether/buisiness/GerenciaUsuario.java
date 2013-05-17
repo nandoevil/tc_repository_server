@@ -1,7 +1,5 @@
 package com.worktogether.buisiness;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,9 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.QueryParam;
 
-import com.worktogether.entities.DominioTipoEvento;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Usuario;
 import com.worktogether.webService.WSReturn;

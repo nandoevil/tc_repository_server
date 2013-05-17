@@ -1,11 +1,8 @@
 package com.worktogether.dto;
 
+import java.util.Date;
 import java.util.List;
 
-import com.worktogether.entities.Geolocalizacao;
-import com.worktogether.entities.Habilidade;
-import com.worktogether.entities.Presenca;
-import com.worktogether.entities.Publicacao;
 import com.worktogether.entities.Usuario;
 
 public class EventoDTO {
@@ -18,13 +15,11 @@ public class EventoDTO {
 	private byte[] imagem;
 	private String tipo;
 	private String situacao;
-	private long dataHora;
+	private Date dataHora;
 	private List<HabilidadeDTO> habilidades;
 	private List<GeolocalizacaoDTO> geolocalizacoes;
 	private List<PresencaDTO> presenca;
 	private List<PublicacaoDTO> publicacoes;
-	
-	//TODO ver o que fazer com esse campo
 	private double sugerido;
 	private Long colocacao;
 	
@@ -70,12 +65,6 @@ public class EventoDTO {
 	public void setSituacao(String situacao) {
 		this.situacao = situacao;
 	}
-	public long getDataHora() {
-		return dataHora;
-	}
-	public void setDataHora(long dataHora) {
-		this.dataHora = dataHora;
-	}
 	public Long getColocacao() {
 		return colocacao;
 	}
@@ -117,6 +106,12 @@ public class EventoDTO {
 	}
 	public void setPublicacoes(List<PublicacaoDTO> publicacoes) {
 		this.publicacoes = publicacoes;
+	}
+	public Date getDataHora() {
+		return dataHora;
+	}
+	public void setDataHora(Date dataHora) {
+		this.dataHora = dataHora;
 	}
 	
 }
