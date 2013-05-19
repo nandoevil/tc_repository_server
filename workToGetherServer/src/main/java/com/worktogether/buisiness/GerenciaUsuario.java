@@ -62,7 +62,6 @@ public class GerenciaUsuario {
 	
 	public String autenticarUsuario(Usuario usuario){
 		try{
-			
 			if(usuario == null || usuario.getEmail() == null || usuario.getSenha() == null){
 				return DominioStatusRequsicao.AUTENTICATION_ERROR.toString();
 			}

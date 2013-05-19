@@ -30,13 +30,13 @@ public class GerenciaEvento {
 		
 		Evento e = em.merge(evento);
 		Long id = e.getId();
-		
-		List<Geolocalizacao> list = e.getGeolocalizacoes();
+		//TODO NAO INSERE GEOLOCALIZACOES
+		/*List<Geolocalizacao> list = e.getGeolocalizacoes();
 		
 		for (Geolocalizacao geolocalizacao : list) {
 			geolocalizacao.setEvento(e);
 			em.persist(geolocalizacao);
-		}
+		}*/
 		
 		em.persist(e);
 		

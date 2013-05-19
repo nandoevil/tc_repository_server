@@ -3,10 +3,12 @@ package com.worktogether.entities;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,21 +34,15 @@ public class Evento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@OneToOne
+	@JoinColumn(name="id_usuario")
+	private Usuario usuario;
+	
 	@Column
 	private String nome;
 	
 	@Column
 	private String descricao;
-	
-	@ManyToMany
-	@JoinTable(name="evento_habilidade", 
-	           joinColumns= @JoinColumn(name= "id_evento" ), 
-	           inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
-	private List<Habilidade> habilidades;
-	
-	@OneToOne
-	@JoinColumn(name="id_usuario")
-	private Usuario usuario;
 	
 	@Column
 	private String objetivo;
@@ -54,8 +50,19 @@ public class Evento {
 	@Column
 	private byte[] imagem;
 	
-	@OneToMany
-	@JoinColumn(name="id_evento")
+	@Enumerated(EnumType.STRING)
+	private DominioTipoEvento tipo; 
+	
+	@Column
+	private String situacao;
+	
+	@ManyToMany
+	@JoinTable(name="evento_habilidade", 
+	           joinColumns= @JoinColumn(name= "id_evento" ), 
+	           inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
+	private List<Habilidade> habilidades;
+	
+	@OneToMany(mappedBy="evento")
 	private List<Geolocalizacao> geolocalizacoes;
 	
 	@OneToMany
@@ -65,12 +72,6 @@ public class Evento {
 	@OneToMany
 	@JoinColumn(name="id_evento")
 	private List<Publicacao> publicacoes;
-	
-	@Enumerated(EnumType.STRING)
-	private DominioTipoEvento tipo; 
-	
-	@Column
-	private String situacao;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;

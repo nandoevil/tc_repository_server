@@ -20,7 +20,6 @@ public class GCMController implements Runnable {
 		this.evento = evento;
 	}
 	
-	@Override
 	public void run() {
 		try{
 			//Cria um objeto Sender usando a chave API do seu projeto
