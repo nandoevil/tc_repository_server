@@ -1,13 +1,19 @@
 package com.worktogether.buisiness;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.worktogether.dto.EventoDTO;
+import com.worktogether.dto.UsuarioDTO;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Usuario;
 import com.worktogether.webService.WSReturn;
@@ -28,8 +34,62 @@ public class GerenciaUsuario {
 		em.persist(u);
 		
 		return id;
-	} 
+	}
 	
+	public List<UsuarioDTO> buscarRankingUsuario(BigDecimal  pontuacaoUltimo){
+		try{
+			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
+			boolean isOutraConsulta = (!isPrimeiraConsulta && pontuacaoUltimo.doubleValue() > 0);
+			
+			if(!isPrimeiraConsulta && !isOutraConsulta){
+				return new ArrayList<UsuarioDTO>();
+			}
+			//TODO BUG RETORNANDO MAIS DE UMA VEZ MESMO USUARIO
+			boolean isId = (pontuacaoUltimo != null);
+			
+			StringBuilder sql = new StringBuilder("select u from Usuario u");
+			
+			if(!isPrimeiraConsulta && isOutraConsulta){
+				sql.append(" where u.pontuacao > ?1");
+			}
+			
+			sql.append(" order by u.pontuacao");
+			
+			TypedQuery<Usuario> qry = em.createQuery(sql.toString(), Usuario.class);
+			qry.setMaxResults(10);
+			
+			if(!isPrimeiraConsulta && isOutraConsulta){
+				qry.setParameter(1, pontuacaoUltimo);
+			}
+			
+			List<Usuario> ranking = qry.getResultList();
+			List<UsuarioDTO> usuarioList = new LinkedList<UsuarioDTO>();
+			
+			for (int i= 0, size = ranking.size(); i < size; i++) {
+				Usuario usuario =  ranking.get(i);
+				
+				UsuarioDTO usu = new UsuarioDTO();
+				
+				usu.setId(usuario.getId());
+				usu.setApelido(usuario.getApelido());
+				usu.setNome(usuario.getNome());
+				usu.setColocacaoRanking(new Long(i + 1));
+				usu.setImagem(usuario.getImagem());
+				
+				usuarioList.add(usu);
+				
+			}
+				
+			return usuarioList;
+			 
+		}catch(NoResultException e){
+			return null;
+			
+		}catch(Throwable e){
+			return null;
+			
+		}
+	}
 	
 	public WSReturn isEmailExistente(String email){
 		WSReturn wr = new WSReturn();

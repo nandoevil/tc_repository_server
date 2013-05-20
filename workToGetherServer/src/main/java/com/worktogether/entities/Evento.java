@@ -1,5 +1,6 @@
 package com.worktogether.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -81,6 +82,9 @@ public class Evento {
 	
 	@Column
 	private Long colocacao;
+	
+	@Column
+	private BigDecimal pontuacao;
 	
 	public Long getId() {
 		return id;
@@ -172,5 +176,13 @@ public class Evento {
 	public void setColocacao(Long colocacao) {
 		this.colocacao = colocacao;
 	}
+	public BigDecimal getPontuacao() {
+		return pontuacao;
+	}
+	public void setPontuacao(BigDecimal pontuacao) {
+		this.pontuacao = pontuacao;
+	}
+	
+	
 
 }

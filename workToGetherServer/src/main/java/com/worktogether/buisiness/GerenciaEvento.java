@@ -1,11 +1,15 @@
 package com.worktogether.buisiness;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -205,6 +209,77 @@ public class GerenciaEvento {
 			}
 		}
 	} 
+	
+	
+	
+	public List<EventoDTO> buscarRankingEvento(BigDecimal pontuacaoUltimo){
+		try{
+			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
+			boolean isOutraConsulta = (!isPrimeiraConsulta && pontuacaoUltimo.doubleValue() > 0);
+			
+			if(!isPrimeiraConsulta && !isOutraConsulta){
+				return new ArrayList<EventoDTO>();
+			}
+			
+			StringBuilder sql = new StringBuilder("select e from Evento e ");
+			
+			if(!isPrimeiraConsulta && isOutraConsulta){
+				sql.append("where e.pontuacao > ?1 ");
+			}
+			
+			sql.append("order by e.pontuacao ");
+			
+			
+			TypedQuery<Evento> qry = em.createQuery(sql.toString(), Evento.class);
+			qry.setMaxResults(10);
+			
+			if(!isPrimeiraConsulta && isOutraConsulta){
+				qry.setParameter(1, pontuacaoUltimo);
+			}
+			
+			List<Evento> ranking = qry.getResultList();
+			List<EventoDTO> eventoList = new LinkedList<EventoDTO>();
+			
+			for (int i= 0, size = ranking.size(); i < size; i++) {
+				Evento evento =  ranking.get(i);
+				
+				EventoDTO eve = new EventoDTO();
+				
+				eve.setId(evento.getId());
+				eve.setNome(evento.getNome());
+				eve.setColocacao(new Long(i+1));
+				eve.setDescricao(evento.getDescricao());
+				eve.setImagem(evento.getImagem());
+				
+				eventoList.add(eve);
+				
+			}
+				
+			return eventoList;
+			
+			/*sqls.append("select * from evento e, (select count(1) c, p.id_evento id from presenca p group by p.id_evento) pc where e.id = pc.id ");
+
+			if(isId){
+				sqls.append("and pc.c > ?1 ");
+			}
+			
+			sqls.append("order by pc.c ");
+			
+			javax.persistence.Query qry = em.createNativeQuery(sqls.toString(), Evento.class);
+			qry.setMaxResults(10);
+			
+			if(isId){
+				qry.setParameter(1, presencasUltimo);
+			}*/
+			 
+		}catch(NoResultException e){
+			return null;
+			
+		}catch(Throwable e){
+			return null;
+			
+		}
+	}
 	
 	
 	private void vincularUsuarioEvento(Usuario usuario, List<Evento> eventos){} 

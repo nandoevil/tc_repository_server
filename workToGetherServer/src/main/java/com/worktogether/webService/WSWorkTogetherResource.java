@@ -1,5 +1,6 @@
 package com.worktogether.webService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import org.jboss.resteasy.spi.HttpResponse;
 import com.worktogether.buisiness.GerenciaEvento;
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.dto.EventoDTO;
+import com.worktogether.dto.UsuarioDTO;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
@@ -95,8 +97,24 @@ public class WSWorkTogetherResource {
 		gre.enviarConviteAutomatico(usuarioInfo, localizacao);
 	} 
 	
-	public List<Evento> buscarRankingEvento(Long colocacaoInicial, Long colocacaoFinal){return null;} 
-	public List<Usuario> buscarRankingUsuario(Long colocacaoInicial, Long colocacaoFinal){return null;} 
+	//TODO MODELAR
+	@POST
+	@Path("/buscarRankingUsuario")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<UsuarioDTO> buscarRankingUsuario(@QueryParam("pontuacao") BigDecimal pontuacao){
+		return gru.buscarRankingUsuario(pontuacao);
+	}
+	
+	//TODO MODELAR
+	@POST
+	@Path("/buscarRankingEvento")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<EventoDTO> buscarRankingEvento(@QueryParam("pontuacao") BigDecimal pontuacao){
+		return gre.buscarRankingEvento(pontuacao);
+	}
+	
 	public String publicar(Publicacao publicacao){return null;} 
 	
 	public void indicarPresenca(List<Presenca> presencas){} 
