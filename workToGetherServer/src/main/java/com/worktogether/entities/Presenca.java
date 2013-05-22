@@ -3,6 +3,7 @@ package com.worktogether.entities;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,13 +26,11 @@ public class Presenca {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne 
-	@JoinColumn(name="id_usuario")
-	private Usuario usuario;
+	@Column(name="id_usuario")
+	private Long idUsuario;
 	
-	@ManyToOne 
-	@JoinColumn(name="id_evento")
-	private Evento evento;
+	@Column(name="id_evento")
+	private Long idEvento;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataHora;
@@ -45,18 +44,6 @@ public class Presenca {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Usuario getUsuario() {
-		return usuario;
-	}
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-	public Evento getEvento() {
-		return evento;
-	}
-	public void setEvento(Evento evento) {
-		this.evento = evento;
-	}
 	public Date getDataHora() {
 		return dataHora;
 	}
@@ -69,5 +56,17 @@ public class Presenca {
 	public void setTipoPresenca(DominioTipoPresenca tipoPresenca) {
 		this.tipoPresenca = tipoPresenca;
 	}
-
+	public Long getIdEvento() {
+		return idEvento;
+	}
+	public void setIdEvento(Long idEvento) {
+		this.idEvento = idEvento;
+	}
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+	
 }

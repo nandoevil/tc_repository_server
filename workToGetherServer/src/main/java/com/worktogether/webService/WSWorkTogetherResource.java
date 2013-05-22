@@ -115,12 +115,20 @@ public class WSWorkTogetherResource {
 		return gre.buscarRankingEvento(pontuacao);
 	}
 	
+	//TODO MODELAR
+	@POST
+	@Path("/confirmarPresenca")
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public String confirmarPresenca(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario, @QueryParam("latitude") BigDecimal latitude, @QueryParam("longitude") BigDecimal longitude){
+		return gre.confirmarPresenca(idEvento, idUsuario, latitude, longitude);
+	}
+	
 	public String publicar(Publicacao publicacao){return null;} 
 	
 	public void indicarPresenca(List<Presenca> presencas){} 
 	public List<Habilidade> buscarHabilidades(Long inicio, Long fiim){return null;} 
 	public String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){return null;} 
-	public String confirmarPresenca(Presenca presencao, String localizacaoAtual){return null;} 
+	 
 	
 	public List<Evento> verificarAtualizacaoEventos(Long idUsuario){
 		return null;

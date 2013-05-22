@@ -63,7 +63,7 @@ public class Evento {
 	           inverseJoinColumns=@JoinColumn(name= "id_habilidade" ))
 	private List<Habilidade> habilidades;
 	
-	@OneToMany(mappedBy="evento")
+	@OneToMany(mappedBy="idEvento")
 	private List<Geolocalizacao> geolocalizacoes;
 	
 	@OneToMany

@@ -17,6 +17,8 @@ import org.hibernate.Session;
 import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.entities.Convite;
+import com.worktogether.entities.DominioTipoGeolocalizacao;
+import com.worktogether.entities.DominioTipoPresenca;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Geolocalizacao;
 import com.worktogether.entities.Habilidade;
@@ -281,6 +283,47 @@ public class GerenciaEvento {
 		}
 	}
 	
+	//TODO MODELAR
+	public String confirmarPresenca(Long idEvento, Long idUsuario, BigDecimal latitude, BigDecimal longitude){
+		try{
+			if(idEvento == null || idUsuario == null || latitude == null || longitude == null){
+				throw new Exception("Parâmetros inválidos para indicação de presença.");
+			}
+			
+			TypedQuery<Geolocalizacao> qGeo = em.createQuery("select g from Geolocalizacao g where g.idEvento = ?1 and g.tipo = ?2",  Geolocalizacao.class);
+			qGeo.setParameter(1, idEvento);
+			qGeo.setParameter(2, DominioTipoGeolocalizacao.EVENTO);
+			Geolocalizacao geo = qGeo.getSingleResult();
+			
+			TypedQuery<Presenca> qry = em.createQuery("select p from Presenca p where p.idEvento = ?1 and p.idUsuario = ?2", Presenca.class);
+			qry.setParameter(1, idEvento);
+			qry.setParameter(2, idUsuario);
+			Presenca presenca = qry.getSingleResult();
+			
+			Session session = (Session) em.getDelegate();
+			Distancia work = new Distancia(latitude, longitude, geo.getLatitude(), geo.getLongitude());
+			session.doWork(work);
+			
+			double distancia = work.getDistancia();
+			
+			if(distancia > 0){
+				if(distancia <=  geo.getRaio()){
+					
+					presenca.setTipoPresenca(DominioTipoPresenca.CONFIRMADA);
+					em.persist(presenca);
+				}
+			}else{
+				throw new Exception("Erro ao calcular distância.");
+			}
+			
+			return DominioStatusRequsicao.SUCESS.toString();
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return DominioStatusRequsicao.SERVER_ERROR.toString();
+		}
+	} 
+	
 	
 	private void vincularUsuarioEvento(Usuario usuario, List<Evento> eventos){} 
 	private void validarRaio(Geolocalizacao geoLocalizacao, String localizacaoAtual){} 
@@ -291,9 +334,7 @@ public class GerenciaEvento {
 	private String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){
 		return null;
 	} 
-	private String confirmarPresenca(Presenca presencao, String localizacaoAtual){
-		return null;
-	} 
+	
 	private List<Evento> verificarAtualizacaoEventos(Long idUltimoEvento){
 		return null;
 	} 
