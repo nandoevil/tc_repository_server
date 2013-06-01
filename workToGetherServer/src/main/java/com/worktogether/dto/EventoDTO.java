@@ -1,7 +1,10 @@
 package com.worktogether.dto;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
 
 import com.worktogether.entities.Usuario;
 
@@ -18,10 +21,11 @@ public class EventoDTO {
 	private Date dataHora;
 	private List<HabilidadeDTO> habilidades;
 	private List<GeolocalizacaoDTO> geolocalizacoes;
-	private List<PresencaDTO> presenca;
+	private List<PresencaDTO> presencas;
 	private List<PublicacaoDTO> publicacoes;
 	private double sugerido;
 	private Long colocacao;
+	private BigDecimal pontuacao;
 	
 	public Long getId() {
 		return id;
@@ -95,12 +99,6 @@ public class EventoDTO {
 	public void setGeolocalizacoes(List<GeolocalizacaoDTO> geolocalizacoes) {
 		this.geolocalizacoes = geolocalizacoes;
 	}
-	public List<PresencaDTO> getPresenca() {
-		return presenca;
-	}
-	public void setPresenca(List<PresencaDTO> presenca) {
-		this.presenca = presenca;
-	}
 	public List<PublicacaoDTO> getPublicacoes() {
 		return publicacoes;
 	}
@@ -112,6 +110,18 @@ public class EventoDTO {
 	}
 	public void setDataHora(Date dataHora) {
 		this.dataHora = dataHora;
+	}
+	public List<PresencaDTO> getPresencas() {
+		return presencas;
+	}
+	public void setPresencas(List<PresencaDTO> presencas) {
+		this.presencas = presencas;
+	}
+	public BigDecimal getPontuacao() {
+		return pontuacao;
+	}
+	public void setPontuacao(BigDecimal pontuacao) {
+		this.pontuacao = pontuacao;
 	}
 	
 }

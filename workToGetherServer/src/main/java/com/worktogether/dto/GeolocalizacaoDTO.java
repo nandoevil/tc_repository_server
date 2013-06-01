@@ -2,10 +2,13 @@ package com.worktogether.dto;
 
 import java.util.Date;
 
+import com.worktogether.entities.DominioTipoGeolocalizacao;
+
 public class GeolocalizacaoDTO {
 	
 	private Long id;
 	private Long idEvento;
+	private String tipo;
 	private double raio;
 	private double latitude;
 	private double longitude;
@@ -46,5 +49,10 @@ public class GeolocalizacaoDTO {
 	public void setDataHora(Date dataHora) {
 		this.dataHora = dataHora;
 	}
-	
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
 }

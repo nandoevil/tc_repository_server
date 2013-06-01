@@ -2,6 +2,7 @@ package com.worktogether.buisiness;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,11 +11,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.QueryParam;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.worktogether.dto.EventoDTO;
+import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.entities.Convite;
 import com.worktogether.entities.DominioTipoGeolocalizacao;
@@ -34,20 +38,79 @@ public class GerenciaEvento {
 	
 	public Long cadastrarEvento(Evento evento){
 		
+		List<Geolocalizacao> listGeo = evento.getGeolocalizacoes();
+		
 		Evento e = em.merge(evento);
 		Long id = e.getId();
-		//TODO NAO INSERE GEOLOCALIZACOES
-		/*List<Geolocalizacao> list = e.getGeolocalizacoes();
 		
-		for (Geolocalizacao geolocalizacao : list) {
-			geolocalizacao.setEvento(e);
+		for (Geolocalizacao geolocalizacao : listGeo) {
+			geolocalizacao.setIdEvento(id);
 			em.persist(geolocalizacao);
-		}*/
+		}
 		
 		em.persist(e);
 		
 		return id;
-	} 
+	}
+	
+	public List<HabilidadeDTO> buscarHabilidadeEvento(Long idEvento){
+		try{
+			if(idEvento == null || idEvento == 0){
+				throw new Exception("Parâmetros inválidos para busca das habilidades do evento.");
+			}
+			
+			javax.persistence.Query qh = em.createNativeQuery("select h.id, h.descricao, h.tipo, h.dataHora from habilidade h, evento_habilidade eh where h.id = eh.id_habilidade and eh.id_evento = ?1", Habilidade.class);
+			qh.setParameter(1, idEvento);
+			List<Habilidade> habilidadeList = qh.getResultList();
+			
+			List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
+			
+			for (Habilidade habilidade : habilidadeList) {
+				HabilidadeDTO hDTO = new HabilidadeDTO();
+				
+				hDTO.setDescricao(habilidade.getDescricao());
+				hDTO.setId(habilidade.getId());
+				hDTO.setTipo(habilidade.getTipo());
+				
+				hlistDTO.add(hDTO);
+			}
+			return hlistDTO;
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<GeolocalizacaoDTO> buscarGeolocalizacaoEvento(Long idEvento){
+		try{
+			if(idEvento == null || idEvento == 0){
+				throw new Exception("Parâmetros inválidos para busca da geolocalização.");
+			}
+			//GEOLOCALIZACAO
+			TypedQuery<Geolocalizacao> qgeo = em.createQuery("select g from Geolocalizacao g where g.idEvento = ?1",  Geolocalizacao.class);
+			qgeo.setParameter(1, idEvento);
+			List<Geolocalizacao> geoList = qgeo.getResultList();
+			List<GeolocalizacaoDTO> geoDTOList = new ArrayList<GeolocalizacaoDTO>();
+			
+			for (Geolocalizacao geolocalizacao : geoList) {
+				GeolocalizacaoDTO geoDTO = new GeolocalizacaoDTO();
+				geoDTO.setDataHora(geolocalizacao.getDataHora());
+				geoDTO.setId(geolocalizacao.getId());
+				geoDTO.setIdEvento(geolocalizacao.getIdEvento());
+				geoDTO.setLatitude(geolocalizacao.getLatitude().doubleValue());//TODO verificar precisao
+				geoDTO.setLongitude(geolocalizacao.getLongitude().doubleValue());
+				geoDTO.setRaio(geolocalizacao.getRaio());
+				geoDTO.setTipo(geolocalizacao.getTipo().toString());
+				geoDTOList.add(geoDTO);
+			}
+			return geoDTOList;
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public List<EventoDTO> buscarEventos(Usuario usuario){
 		//PEGA OS EVENTOS QUE O USUARIO ESTA VISUALIZANDO E CRIA UMA STRING
@@ -94,7 +157,9 @@ public class GerenciaEvento {
 			dto.setObjetivo(entity.getObjetivo());
 			dto.setImagem(entity.getImagem());
 			dto.setSugerido(entity.getSugerido());
+			dto.setPontuacao(entity.getPontuacao());
 			
+			//HABILIDADES
 			List<Habilidade> habilidadesEntity = entity.getHabilidades();
 			List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
 			
@@ -166,6 +231,25 @@ public class GerenciaEvento {
 				dto.setImagem(entity.getImagem());
 				dto.setSugerido(entity.getSugerido());
 				
+				//GEOLOCALIZACAO
+				TypedQuery<Geolocalizacao> geoList = em.createQuery("select g from Geolocalizacao g where g.idEvento = ?1 and g.tipo = ?2",  Geolocalizacao.class);
+				geoList.setParameter(1, entity.getId());
+				geoList.setParameter(2, DominioTipoGeolocalizacao.EVENTO);
+				Geolocalizacao geo = geoList.getSingleResult();
+				GeolocalizacaoDTO geoDTO = new GeolocalizacaoDTO();
+				
+				geoDTO.setDataHora(geo.getDataHora());
+				geoDTO.setId(geo.getId());
+				geoDTO.setIdEvento(geo.getIdEvento());
+				geoDTO.setLatitude(geo.getLatitude().doubleValue());//TODO verificar precisao
+				geoDTO.setLongitude(geo.getLongitude().doubleValue());
+				geoDTO.setRaio(geo.getRaio());
+				
+				List<GeolocalizacaoDTO> listGeoReturn = new ArrayList<GeolocalizacaoDTO>();
+				listGeoReturn.add(geoDTO);
+				dto.setGeolocalizacoes(listGeoReturn);
+				
+				//HABILIDADES
 				List<Habilidade> hlist = entity.getHabilidades();
 				List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
 				
@@ -256,23 +340,7 @@ public class GerenciaEvento {
 				eventoList.add(eve);
 				
 			}
-				
 			return eventoList;
-			
-			/*sqls.append("select * from evento e, (select count(1) c, p.id_evento id from presenca p group by p.id_evento) pc where e.id = pc.id ");
-
-			if(isId){
-				sqls.append("and pc.c > ?1 ");
-			}
-			
-			sqls.append("order by pc.c ");
-			
-			javax.persistence.Query qry = em.createNativeQuery(sqls.toString(), Evento.class);
-			qry.setMaxResults(10);
-			
-			if(isId){
-				qry.setParameter(1, presencasUltimo);
-			}*/
 			 
 		}catch(NoResultException e){
 			return null;
@@ -283,11 +351,41 @@ public class GerenciaEvento {
 		}
 	}
 	
+	public String indicarPresenca(Long idEvento, Long idUsuario){
+		try{
+			if(idEvento == null || idUsuario == null || idEvento == 0 || idUsuario == 0){
+				throw new Exception("Parâmetros inválidos para indicação de presença.");
+			}
+			
+			TypedQuery<Evento> qry = em.createQuery("select e from Evento e where id = ?1", Evento.class);
+			qry.setParameter(1, idEvento);
+			Evento evento = qry.getSingleResult();
+			
+			if(new Date().compareTo(evento.getDataHora()) > 0){
+				return DominioStatusRequsicao.DENIED.toString();
+			}
+			
+			Presenca p = new Presenca();
+			p.setDataHora(new Date());
+			p.setIdEvento(idEvento);
+			p.setIdUsuario(idUsuario);
+			p.setTipoPresenca(DominioTipoPresenca.INDICADA);
+			
+			em.persist(p);
+			
+			return DominioStatusRequsicao.SUCESS.toString();
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return DominioStatusRequsicao.SERVER_ERROR.toString();
+		}
+	}
+	
 	//TODO MODELAR
 	public String confirmarPresenca(Long idEvento, Long idUsuario, BigDecimal latitude, BigDecimal longitude){
 		try{
 			if(idEvento == null || idUsuario == null || latitude == null || longitude == null){
-				throw new Exception("Parâmetros inválidos para indicação de presença.");
+				throw new Exception("Parâmetros inválidos para confirmação de presença.");
 			}
 			
 			TypedQuery<Geolocalizacao> qGeo = em.createQuery("select g from Geolocalizacao g where g.idEvento = ?1 and g.tipo = ?2",  Geolocalizacao.class);

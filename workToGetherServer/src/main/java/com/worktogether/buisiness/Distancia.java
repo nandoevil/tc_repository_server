@@ -24,7 +24,6 @@ public class Distancia implements Work {
 	}
 	
 
-	@Override
 	public void execute(Connection connection) throws SQLException {
 		String query ="{? = call sf_distancia_entre_coordenadas(?, ?, ?, ?)}";
 		CallableStatement statement = connection.prepareCall(query);

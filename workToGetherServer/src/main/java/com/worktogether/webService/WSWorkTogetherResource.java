@@ -17,6 +17,8 @@ import org.jboss.resteasy.spi.HttpResponse;
 import com.worktogether.buisiness.GerenciaEvento;
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.dto.EventoDTO;
+import com.worktogether.dto.GeolocalizacaoDTO;
+import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.dto.UsuarioDTO;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
@@ -123,16 +125,43 @@ public class WSWorkTogetherResource {
 		return gre.confirmarPresenca(idEvento, idUsuario, latitude, longitude);
 	}
 	
+	
+	@POST
+	@Path("/indicarPresenca")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public String indicarPresenca(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario){
+		return gre.indicarPresenca(idEvento, idUsuario);
+	}
+	
 	public String publicar(Publicacao publicacao){return null;} 
 	
-	public void indicarPresenca(List<Presenca> presencas){} 
 	public List<Habilidade> buscarHabilidades(Long inicio, Long fiim){return null;} 
 	public String atualizarListaEventosUsuairo(Usuario usuario, List<Presenca> eventos){return null;} 
 	 
 	
-	public List<Evento> verificarAtualizacaoEventos(Long idUsuario){
-		return null;
-		
-	} 
+	@POST
+	@Path("/verificarAtualizacaoEventos")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<EventoDTO> verificarAtualizacaoEventos(Usuario usuario){
+		return gre.buscarEventos(usuario);
+	}
+	
+	@POST
+	@Path("/buscarGeolocalizacaoEvento")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<GeolocalizacaoDTO> buscarGeolocalizacaoEvento(@QueryParam("idEvento") Long idEvento){
+		return gre.buscarGeolocalizacaoEvento(idEvento);
+	}
+	
+	@POST
+	@Path("/buscarHabilidadeEvento")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<HabilidadeDTO> buscarHabilidadeEvento(@QueryParam("idEvento") Long idEvento){
+		return gre.buscarHabilidadeEvento(idEvento);
+	}
 
 }

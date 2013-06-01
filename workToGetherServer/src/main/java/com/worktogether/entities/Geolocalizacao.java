@@ -88,5 +88,4 @@ public class Geolocalizacao {
 		this.idEvento = idEvento;
 	}
 	
-	
 }
