@@ -163,5 +163,14 @@ public class WSWorkTogetherResource {
 	public List<HabilidadeDTO> buscarHabilidadeEvento(@QueryParam("idEvento") Long idEvento){
 		return gre.buscarHabilidadeEvento(idEvento);
 	}
+	
+	//TODO MODELAR
+	@POST
+	@Path("/buscarEventosUsuario")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<EventoDTO> buscarEventosUsuario(@QueryParam("idUsuario") Long idUsuario){
+		return gre.buscarEventosUsuario(idUsuario);
+	}
 
 }

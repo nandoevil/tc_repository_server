@@ -11,9 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.QueryParam;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -21,6 +19,7 @@ import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.entities.Convite;
+import com.worktogether.entities.DominioRedeSocial;
 import com.worktogether.entities.DominioTipoGeolocalizacao;
 import com.worktogether.entities.DominioTipoPresenca;
 import com.worktogether.entities.Evento;
@@ -28,6 +27,7 @@ import com.worktogether.entities.Geolocalizacao;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
+import com.worktogether.entities.UsuarioEvento;
 import com.worktogether.gcm.GCMController;
 
 @Stateless
@@ -49,6 +49,22 @@ public class GerenciaEvento {
 		}
 		
 		em.persist(e);
+		
+		//VINCULAR USUARIO AO EVENTO
+		UsuarioEvento ue = new UsuarioEvento();
+		ue.setIdUsuario(evento.getUsuario().getId());
+		ue.setIdEvento(id);
+		
+		em.persist(ue);
+		
+		//INDICA A PRESENCA DO USUARIO
+		Presenca p = new Presenca();
+		p.setDataHora(new Date());
+		p.setIdEvento(id);
+		p.setIdUsuario(evento.getUsuario().getId());
+		p.setTipoPresenca(DominioTipoPresenca.INDICADA);
+		
+		em.persist(p);
 		
 		return id;
 	}
@@ -296,7 +312,39 @@ public class GerenciaEvento {
 		}
 	} 
 	
-	
+	public List<EventoDTO> buscarEventosUsuario(Long idUsuario){
+		try{
+			if(idUsuario == null || idUsuario == 0){
+				throw new Exception("Parâmetros inválidos para busca dos eventos do usuário.");
+			}
+			
+			javax.persistence.Query qh = em.createNativeQuery("select * from evento e where e.id in (select ue.id_evento from usuario_evento ue where ue.id_usuario = ?1)", Evento.class);
+			qh.setParameter(1, idUsuario);
+			List<Evento> eventoList = qh.getResultList();
+			List<EventoDTO> eventoDTOList = new ArrayList<EventoDTO>();
+			
+			for (Evento entity : eventoList) {
+				EventoDTO dto = new EventoDTO();
+				
+				dto.setId(entity.getId());
+				dto.setNome(entity.getNome());
+				dto.setDataHora(entity.getDataHora());
+				dto.setColocacao(entity.getColocacao());
+				dto.setDescricao(entity.getDescricao());
+				dto.setObjetivo(entity.getObjetivo());
+				dto.setImagem(entity.getImagem());
+				dto.setSugerido(entity.getSugerido());
+				dto.setPontuacao(entity.getPontuacao());
+				
+				eventoDTOList.add(dto);
+			}
+			return eventoDTOList;
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	public List<EventoDTO> buscarRankingEvento(BigDecimal pontuacaoUltimo){
 		try{
@@ -357,6 +405,19 @@ public class GerenciaEvento {
 				throw new Exception("Parâmetros inválidos para indicação de presença.");
 			}
 			
+			try{
+				TypedQuery<Presenca> qry = em.createQuery("select p from Presenca p where p.idEvento = ?1 and p.idUsuario = ?2", Presenca.class);
+				qry.setParameter(1, idEvento);
+				qry.setParameter(2, idUsuario);
+				
+				qry.getResultList();
+				
+				return DominioStatusRequsicao.FOUND.toString();
+				
+			}catch(Throwable e){
+				e.printStackTrace();
+			}
+			
 			TypedQuery<Evento> qry = em.createQuery("select e from Evento e where id = ?1", Evento.class);
 			qry.setParameter(1, idEvento);
 			Evento evento = qry.getSingleResult();
@@ -371,7 +432,14 @@ public class GerenciaEvento {
 			p.setIdUsuario(idUsuario);
 			p.setTipoPresenca(DominioTipoPresenca.INDICADA);
 			
-			em.persist(p);
+			em.persist(p); //TODO TRATAR PARTICIPAR MAIS DE UMA VEZ
+			
+			//VINCULAR USUARIO AO EVENTO
+			UsuarioEvento ue = new UsuarioEvento();
+			ue.setIdUsuario(idUsuario);
+			ue.setIdEvento(idEvento);
+			
+			em.persist(ue);
 			
 			return DominioStatusRequsicao.SUCESS.toString();
 			
