@@ -343,6 +343,36 @@ public class GerenciaEvento {
 		}
 	}
 	
+	public String removerPresenca(Long idEvento, Long idUsuario){
+		try{
+			if(idEvento == null || idUsuario == null || idEvento == 0 || idUsuario == 0){
+				throw new Exception("Parâmetros inválidos para indicação de presença.");
+			}
+			TypedQuery<Presenca> qry = em.createQuery("select p from Presenca p where p.idEvento = ?1 and p.idUsuario = ?2", Presenca.class);
+			qry.setParameter(1, idEvento);
+			qry.setParameter(2, idUsuario);
+			
+			List<Presenca> list = qry.getResultList();
+			
+			for (Presenca presenca : list) {
+				em.remove(presenca);
+			}
+			
+			//DESVINCULA USUARIO AO EVENTO
+			UsuarioEvento ue = new UsuarioEvento();
+			ue.setIdUsuario(idUsuario);
+			ue.setIdEvento(idEvento);
+			
+			em.remove(ue);
+			
+			return DominioStatusRequsicao.SUCESS.toString();
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return DominioStatusRequsicao.SERVER_ERROR.toString();
+		}
+	}
+	
 	
 	public String indicarPresenca(Long idEvento, Long idUsuario){
 		try{
@@ -355,9 +385,11 @@ public class GerenciaEvento {
 				qry.setParameter(1, idEvento);
 				qry.setParameter(2, idUsuario);
 				
-				qry.getResultList();
+				List<Presenca> list = qry.getResultList();
 				
-				return DominioStatusRequsicao.FOUND.toString();
+				if(list.size() != 0){
+					return DominioStatusRequsicao.FOUND.toString();
+				}
 				
 			}catch(Throwable e){
 				e.printStackTrace();

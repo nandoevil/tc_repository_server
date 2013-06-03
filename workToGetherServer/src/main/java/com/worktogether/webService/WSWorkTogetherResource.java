@@ -152,6 +152,18 @@ public class WSWorkTogetherResource {
 		return msg;
 	}
 	
+	@POST
+	@Path("/removerPresenca")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public String removerPresenca(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario){
+		return gre.removerPresenca(idEvento, idUsuario);
+	}
+	
+	
+	
+	
+	
 	public String publicar(Publicacao publicacao){return null;} 
 	
 	public List<Habilidade> buscarHabilidades(Long inicio, Long fiim){return null;} 
