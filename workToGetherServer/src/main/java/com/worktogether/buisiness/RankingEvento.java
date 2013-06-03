@@ -1,12 +1,16 @@
 package com.worktogether.buisiness;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 public class RankingEvento implements RankingEstrategia {
 
-	public List<Object> rankiamento(List<Object> list) {
-		// TODO Auto-generated method stub
-		return null;
+	public BigDecimal rankiamento(Long id) {
+		return new BigDecimal(1);
+	}
+
+	@Override
+	public BigDecimal calcularPontuacao(Long id) {
+		return new BigDecimal(1);
 	}
 
 }

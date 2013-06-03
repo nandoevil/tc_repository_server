@@ -1,9 +1,12 @@
 package com.worktogether.buisiness;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 public interface RankingEstrategia {
 	
-	public List<Object> rankiamento(List<Object> list);
+	public BigDecimal rankiamento(Long id);
+	
+	//TODO MODELAR
+	public BigDecimal calcularPontuacao(Long id);
 
 }

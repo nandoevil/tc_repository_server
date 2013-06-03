@@ -3,6 +3,6 @@ package com.worktogether.entities;
 
 public enum DominioTipoPontuacao {
 	
-	PUBLICACAO, PRESENCA;
+	PUBLICACAO, PRESENCA, INDICAR_PRESENCA;
 
 }

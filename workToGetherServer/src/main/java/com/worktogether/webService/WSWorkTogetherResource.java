@@ -14,12 +14,15 @@ import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.spi.HttpResponse;
 
+import com.worktogether.buisiness.DominioStatusRequsicao;
 import com.worktogether.buisiness.GerenciaEvento;
+import com.worktogether.buisiness.GerenciaRanking;
 import com.worktogether.buisiness.GerenciaUsuario;
 import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.dto.UsuarioDTO;
+import com.worktogether.entities.DominioTipoPontuacao;
 import com.worktogether.entities.Evento;
 import com.worktogether.entities.Habilidade;
 import com.worktogether.entities.Presenca;
@@ -37,6 +40,9 @@ public class WSWorkTogetherResource {
 	
 	@Inject
 	GerenciaEvento gre;
+	
+	@Inject
+	GerenciaRanking grk;
 	
 	@POST
 	@Path("/validarEmail")
@@ -105,7 +111,7 @@ public class WSWorkTogetherResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<UsuarioDTO> buscarRankingUsuario(@QueryParam("pontuacao") BigDecimal pontuacao){
-		return gru.buscarRankingUsuario(pontuacao);
+		return grk.buscarRankingUsuario(pontuacao);
 	}
 	
 	//TODO MODELAR
@@ -114,7 +120,7 @@ public class WSWorkTogetherResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<EventoDTO> buscarRankingEvento(@QueryParam("pontuacao") BigDecimal pontuacao){
-		return gre.buscarRankingEvento(pontuacao);
+		return grk.buscarRankingEvento(pontuacao);
 	}
 	
 	//TODO MODELAR
@@ -122,7 +128,13 @@ public class WSWorkTogetherResource {
 	@Path("/confirmarPresenca")
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public String confirmarPresenca(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario, @QueryParam("latitude") BigDecimal latitude, @QueryParam("longitude") BigDecimal longitude){
-		return gre.confirmarPresenca(idEvento, idUsuario, latitude, longitude);
+		String msg = gre.confirmarPresenca(idEvento, idUsuario, latitude, longitude);
+		
+		if(DominioStatusRequsicao.SUCESS.toString().equalsIgnoreCase(msg)){
+			grk.atualizarPontuacaoEvento(idEvento, DominioTipoPontuacao.PRESENCA);
+			grk.atualizarPontuacaoUsuario(idUsuario, DominioTipoPontuacao.PRESENCA);
+		}
+		return msg;
 	}
 	
 	
@@ -131,7 +143,13 @@ public class WSWorkTogetherResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public String indicarPresenca(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario){
-		return gre.indicarPresenca(idEvento, idUsuario);
+		String msg = gre.indicarPresenca(idEvento, idUsuario);
+		
+		if(DominioStatusRequsicao.SUCESS.toString().equalsIgnoreCase(msg)){
+			grk.atualizarPontuacaoEvento(idEvento, DominioTipoPontuacao.INDICAR_PRESENCA);
+			grk.atualizarPontuacaoUsuario(idUsuario, DominioTipoPontuacao.INDICAR_PRESENCA);
+		}
+		return msg;
 	}
 	
 	public String publicar(Publicacao publicacao){return null;} 

@@ -3,12 +3,10 @@ package com.worktogether.buisiness;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -19,7 +17,6 @@ import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
 import com.worktogether.entities.Convite;
-import com.worktogether.entities.DominioRedeSocial;
 import com.worktogether.entities.DominioTipoGeolocalizacao;
 import com.worktogether.entities.DominioTipoPresenca;
 import com.worktogether.entities.Evento;
@@ -176,7 +173,7 @@ public class GerenciaEvento {
 			dto.setPontuacao(entity.getPontuacao());
 			
 			//HABILIDADES
-			List<Habilidade> habilidadesEntity = entity.getHabilidades();
+			/*List<Habilidade> habilidadesEntity = entity.getHabilidades();
 			List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
 			
 			for (Habilidade habilidade : habilidadesEntity) {
@@ -189,7 +186,7 @@ public class GerenciaEvento {
 				hlistDTO.add(hDTO);
 			}
 			
-			dto.setHabilidades(hlistDTO);
+			dto.setHabilidades(hlistDTO);*/
 			
 			retornoList.add(dto);
 		}
@@ -266,7 +263,7 @@ public class GerenciaEvento {
 				dto.setGeolocalizacoes(listGeoReturn);
 				
 				//HABILIDADES
-				List<Habilidade> hlist = entity.getHabilidades();
+				/*List<Habilidade> hlist = entity.getHabilidades();
 				List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
 				
 				for (Habilidade habilidade : hlist) {
@@ -277,7 +274,7 @@ public class GerenciaEvento {
 					hDTO.setTipo(habilidade.getTipo());
 				}
 				
-				dto.setHabilidades(hlistDTO);
+				dto.setHabilidades(hlistDTO);*/
 				
 				retornoList.add(dto);
 			}
@@ -346,58 +343,6 @@ public class GerenciaEvento {
 		}
 	}
 	
-	public List<EventoDTO> buscarRankingEvento(BigDecimal pontuacaoUltimo){
-		try{
-			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
-			boolean isOutraConsulta = (!isPrimeiraConsulta && pontuacaoUltimo.doubleValue() > 0);
-			
-			if(!isPrimeiraConsulta && !isOutraConsulta){
-				return new ArrayList<EventoDTO>();
-			}
-			
-			StringBuilder sql = new StringBuilder("select e from Evento e ");
-			
-			if(!isPrimeiraConsulta && isOutraConsulta){
-				sql.append("where e.pontuacao > ?1 ");
-			}
-			
-			sql.append("order by e.pontuacao ");
-			
-			
-			TypedQuery<Evento> qry = em.createQuery(sql.toString(), Evento.class);
-			qry.setMaxResults(10);
-			
-			if(!isPrimeiraConsulta && isOutraConsulta){
-				qry.setParameter(1, pontuacaoUltimo);
-			}
-			
-			List<Evento> ranking = qry.getResultList();
-			List<EventoDTO> eventoList = new LinkedList<EventoDTO>();
-			
-			for (int i= 0, size = ranking.size(); i < size; i++) {
-				Evento evento =  ranking.get(i);
-				
-				EventoDTO eve = new EventoDTO();
-				
-				eve.setId(evento.getId());
-				eve.setNome(evento.getNome());
-				eve.setColocacao(new Long(i+1));
-				eve.setDescricao(evento.getDescricao());
-				eve.setImagem(evento.getImagem());
-				
-				eventoList.add(eve);
-				
-			}
-			return eventoList;
-			 
-		}catch(NoResultException e){
-			return null;
-			
-		}catch(Throwable e){
-			return null;
-			
-		}
-	}
 	
 	public String indicarPresenca(Long idEvento, Long idUsuario){
 		try{
@@ -432,9 +377,9 @@ public class GerenciaEvento {
 			p.setIdUsuario(idUsuario);
 			p.setTipoPresenca(DominioTipoPresenca.INDICADA);
 			
-			em.persist(p); //TODO TRATAR PARTICIPAR MAIS DE UMA VEZ
+			em.persist(p); 
 			
-			//VINCULAR USUARIO AO EVENTO
+			//VINCULA USUARIO AO EVENTO
 			UsuarioEvento ue = new UsuarioEvento();
 			ue.setIdUsuario(idUsuario);
 			ue.setIdEvento(idEvento);
@@ -472,7 +417,7 @@ public class GerenciaEvento {
 			
 			double distancia = work.getDistancia();
 			
-			if(distancia > 0){
+			if(distancia >= 0){
 				if(distancia <=  geo.getRaio()){
 					
 					presenca.setTipoPresenca(DominioTipoPresenca.CONFIRMADA);
