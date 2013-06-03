@@ -95,26 +95,19 @@ public class GerenciaRanking {
 	public List<UsuarioDTO> buscarRankingUsuario(BigDecimal  pontuacaoUltimo){
 		try{
 			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
-			boolean isOutraConsulta = (!isPrimeiraConsulta && pontuacaoUltimo.doubleValue() > 0);
-			
-			if(!isPrimeiraConsulta && !isOutraConsulta){
-				return new ArrayList<UsuarioDTO>();
-			}
-			//TODO BUG RETORNANDO MAIS DE UMA VEZ MESMO USUARIO
-			boolean isId = (pontuacaoUltimo != null);
 			
 			StringBuilder sql = new StringBuilder("select u from Usuario u");
 			
-			if(!isPrimeiraConsulta && isOutraConsulta){
+			if(!isPrimeiraConsulta){
 				sql.append(" where u.pontuacao > ?1");
 			}
 			
-			sql.append(" order by u.pontuacao");
+			sql.append(" order by u.pontuacao desc");
 			
 			TypedQuery<Usuario> qry = em.createQuery(sql.toString(), Usuario.class);
 			qry.setMaxResults(10);
 			
-			if(!isPrimeiraConsulta && isOutraConsulta){
+			if(!isPrimeiraConsulta){
 				qry.setParameter(1, pontuacaoUltimo);
 			}
 			
@@ -131,6 +124,7 @@ public class GerenciaRanking {
 				usu.setNome(usuario.getNome());
 				usu.setColocacaoRanking(new Long(i + 1));
 				usu.setImagem(usuario.getImagem());
+				usu.setPontuacao(usuario.getPontuacao());
 				
 				usuarioList.add(usu);
 				
@@ -151,25 +145,24 @@ public class GerenciaRanking {
 	public List<EventoDTO> buscarRankingEvento(BigDecimal pontuacaoUltimo){
 		try{
 			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
-			boolean isOutraConsulta = (!isPrimeiraConsulta && pontuacaoUltimo.doubleValue() > 0);
 			
-			if(!isPrimeiraConsulta && !isOutraConsulta){
+			if(!isPrimeiraConsulta){
 				return new ArrayList<EventoDTO>();
 			}
 			
 			StringBuilder sql = new StringBuilder("select e from Evento e ");
 			
-			if(!isPrimeiraConsulta && isOutraConsulta){
+			if(!isPrimeiraConsulta){
 				sql.append("where e.pontuacao > ?1 ");
 			}
 			
-			sql.append("order by e.pontuacao ");
+			sql.append("order by e.pontuacao desc");
 			
 			
 			TypedQuery<Evento> qry = em.createQuery(sql.toString(), Evento.class);
 			qry.setMaxResults(10);
 			
-			if(!isPrimeiraConsulta && isOutraConsulta){
+			if(!isPrimeiraConsulta){
 				qry.setParameter(1, pontuacaoUltimo);
 			}
 			
@@ -186,6 +179,7 @@ public class GerenciaRanking {
 				eve.setColocacao(new Long(i+1));
 				eve.setDescricao(evento.getDescricao());
 				eve.setImagem(evento.getImagem());
+				eve.setPontuacao(evento.getPontuacao());
 				
 				eventoList.add(eve);
 				
