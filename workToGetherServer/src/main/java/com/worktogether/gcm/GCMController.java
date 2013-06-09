@@ -3,38 +3,44 @@ package com.worktogether.gcm;
 
 import java.io.IOException;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Message.Builder;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-import com.worktogether.entities.Evento;
+import com.worktogether.constant.ApplicationConstant;
 
 public class GCMController implements Runnable {
 	
 	private String idDispositivoGCM;
-	private Evento evento;
+	private Long idEvento;
+	private String nomeEvento;
 	
-	public GCMController(String idDispositivoGCM, Evento evento){
+	public GCMController(String idDispositivoGCM, Long idEvento, String nomeEvento){
 		this.idDispositivoGCM = idDispositivoGCM;
-		this.evento = evento;
+		this.idEvento = idEvento;
+		this.nomeEvento = nomeEvento;
 	}
 	
 	public void run() {
 		try{
 			//Cria um objeto Sender usando a chave API do seu projeto
-			Sender sender = new Sender("AIzaSyBIre-L6i5efqqPalBaEF2TL5UmWWRj2KA");
+			Sender sender = new Sender(ApplicationConstant.GOOGLE_API_KEY);
 			
-			Builder builder = new Message.Builder().collapseKey("1").timeToLive(3).delayWhileIdle(true);
+			Builder builder = new Message.Builder().collapseKey("worktogether_notification").timeToLive(600).delayWhileIdle(true);
 			
 			//Montagem do convite
 			StringBuilder msg = new StringBuilder();
-			msg.append("Convite para o evento");
-			msg.append(evento);
+			msg.append("Convite ");
+			msg.append(nomeEvento);
+			msg.append(";");
+			msg.append(idEvento);
 			
 			Message message = builder.addData("convite", msg.toString()).build();
 			
-			Result result = sender.send(message, idDispositivoGCM, 1);
+			Result result = sender.send(message, idDispositivoGCM, ApplicationConstant.TENTATIVAS_ENVIO_MSG_GCM);
 			
 			//Validacoes
 			if (result.getMessageId() != null) {

@@ -85,8 +85,7 @@ public class WSWorkTogetherResource {
 	@Produces({MediaType.APPLICATION_JSON})
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<EventoDTO> buscarEventosSugeridos(Usuario usuario) {
-		List<EventoDTO> list = gre.buscarEventosSugeridos(usuario);
-		return list;
+		return gre.buscarEventos(usuario);
 	}
 	
 	@POST
@@ -201,6 +200,15 @@ public class WSWorkTogetherResource {
 	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 	public List<EventoDTO> buscarEventosUsuario(@QueryParam("idUsuario") Long idUsuario){
 		return gre.buscarEventosUsuario(idUsuario);
+	}
+	
+	//TODO MODELAR
+	@POST
+	@Path("/buscarEvento")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public EventoDTO buscarEvento(@QueryParam("idEvento") Long idEvento, @QueryParam("idEvento") Long idUsuario){
+		return gre.buscarEvento(idEvento, idUsuario);
 	}
 
 }

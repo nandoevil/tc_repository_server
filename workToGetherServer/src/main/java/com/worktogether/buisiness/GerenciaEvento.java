@@ -1,5 +1,6 @@
 package com.worktogether.buisiness;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,9 +11,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.Result;
+import com.google.android.gcm.server.Sender;
+import com.google.android.gcm.server.Message.Builder;
+import com.worktogether.constant.ApplicationConstant;
 import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
@@ -26,6 +35,7 @@ import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
 import com.worktogether.entities.UsuarioEvento;
 import com.worktogether.gcm.GCMController;
+import com.worktogether.gcm.SendMessage;
 
 @Stateless
 public class GerenciaEvento {
@@ -149,11 +159,7 @@ public class GerenciaEvento {
 		Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
 		query.setParameter("id_evento_list", eventoIds.toString());
 		query.setParameter("id_usuario", usuario.getId());
-		query.setParameter("visualizacao", new Long(1));
-		
-		query.setParameter("id_evento_list", eventoIds.toString());
-		query.setParameter("id_usuario", usuario.getId());
-		query.setParameter("visualizacao", new Long(1));
+		query.setParameter("id_evento", null);
 		
 		List<Evento> eventoList = (List<Evento>) query.list();
 		List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
@@ -172,61 +178,25 @@ public class GerenciaEvento {
 			dto.setSugerido(entity.getSugerido());
 			dto.setPontuacao(entity.getPontuacao());
 			
-			//HABILIDADES
-			/*List<Habilidade> habilidadesEntity = entity.getHabilidades();
-			List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
-			
-			for (Habilidade habilidade : habilidadesEntity) {
-				HabilidadeDTO hDTO = new HabilidadeDTO();
-				
-				hDTO.setDescricao(habilidade.getDescricao());
-				hDTO.setId(habilidade.getId());
-				hDTO.setTipo(habilidade.getTipo());
-				
-				hlistDTO.add(hDTO);
-			}
-			
-			dto.setHabilidades(hlistDTO);*/
-			
 			retornoList.add(dto);
 		}
-		
 		return retornoList;
-		
 	} 
 	
 	//TODO Verificar modelagem
-	public List<EventoDTO> buscarEventosSugeridos(Usuario usuario) {
+	public EventoDTO buscarEvento(Long idEvento, Long idUsuario) {
 		try{
 			
-			if(usuario == null || usuario.getId() == null){
+			if(idEvento == null || idUsuario == null){
 				return null;
 			}
 			
-			//PEGA OS EVENTOS QUE O USUARIO ESTA VISUALIZANDO E CRIA UMA STRING
-			//COM OS IDS PARA SER ENVIADO COM PARAMETRO A PROCEDURE
-			List<Evento> list = usuario.getEventos();
-			StringBuilder eventoIds = new StringBuilder();
-			
-			if(list != null && list.size() > 0){
-				int size = list.size();
-				
-				for (int i=0, s = size; i < size; i++) {
-					eventoIds.append(list.get(i).getId());
-					
-					if(i != size - 1){
-						eventoIds.append(";");
-					}
-					
-				}
-			}
-			
-			//CHAMADA DA PROCEDURE SP_SUGERIR_EVENTOS PARA APENAS EVENTOS SUGERIDOS
+			//CHAMADA DA PROCEDURE SP_SUGERIR_EVENTOS PARA BUSCAR O EVENTO DA NOTIFICACAO
 			Session session = (Session) em.getDelegate();
 			Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
-			query.setParameter("id_evento_list", eventoIds.toString());
-			query.setParameter("id_usuario", usuario.getId());
-			query.setParameter("visualizacao", new Long(1));
+			query.setParameter("id_evento_list", null);
+			query.setParameter("id_usuario", idUsuario);
+			query.setParameter("id_evento", idEvento);
 			
 			List<Evento> eventoList = (List<Evento>) query.list();
 			List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
@@ -244,42 +214,10 @@ public class GerenciaEvento {
 				dto.setImagem(entity.getImagem());
 				dto.setSugerido(entity.getSugerido());
 				
-				//GEOLOCALIZACAO
-				TypedQuery<Geolocalizacao> geoList = em.createQuery("select g from Geolocalizacao g where g.idEvento = ?1 and g.tipo = ?2",  Geolocalizacao.class);
-				geoList.setParameter(1, entity.getId());
-				geoList.setParameter(2, DominioTipoGeolocalizacao.EVENTO);
-				Geolocalizacao geo = geoList.getSingleResult();
-				GeolocalizacaoDTO geoDTO = new GeolocalizacaoDTO();
-				
-				geoDTO.setDataHora(geo.getDataHora());
-				geoDTO.setId(geo.getId());
-				geoDTO.setIdEvento(geo.getIdEvento());
-				geoDTO.setLatitude(geo.getLatitude().doubleValue());//TODO verificar precisao
-				geoDTO.setLongitude(geo.getLongitude().doubleValue());
-				geoDTO.setRaio(geo.getRaio());
-				
-				List<GeolocalizacaoDTO> listGeoReturn = new ArrayList<GeolocalizacaoDTO>();
-				listGeoReturn.add(geoDTO);
-				dto.setGeolocalizacoes(listGeoReturn);
-				
-				//HABILIDADES
-				/*List<Habilidade> hlist = entity.getHabilidades();
-				List<HabilidadeDTO> hlistDTO = new ArrayList<HabilidadeDTO>();
-				
-				for (Habilidade habilidade : hlist) {
-					HabilidadeDTO hDTO = new HabilidadeDTO();
-					
-					hDTO.setDescricao(habilidade.getDescricao());
-					hDTO.setId(habilidade.getId());
-					hDTO.setTipo(habilidade.getTipo());
-				}
-				
-				dto.setHabilidades(hlistDTO);*/
-				
-				retornoList.add(dto);
+				return dto;
 			}
 			
-			return retornoList;
+			return null;
 			
 		}catch(Throwable e){
 			return null;
@@ -292,9 +230,11 @@ public class GerenciaEvento {
 		if(usuarioInfo != null && !"".equalsIgnoreCase(usuarioInfo) && 
 		   localizacao != null && !"".equalsIgnoreCase(localizacao)){
 			
+			//ID USUARIO;ID GCM
 			String[] latiLong = localizacao.split(";");
 			String[] ids = usuarioInfo.split(";");
 			
+			//TODO REMOVER COMENTARIO
 			//CHAMADA DA PROCEDURE sp_localizar_eventos_sugeridos PARA APENAS EVENTOS SUGERIDOS
 			Session session = (Session) em.getDelegate();
 			Query query = session.getNamedQuery("callStoreProcedureEventosSugeridosGeo");
@@ -304,7 +244,7 @@ public class GerenciaEvento {
 			
 			List<Evento> eventoList = (List<Evento>) query.list();
 			for (Evento evento : eventoList) {
-				new Thread(new GCMController(ids[0], evento)).start();
+				new Thread(new GCMController(ids[1], evento.getId(), evento.getNome())).start();
 			}
 		}
 	} 
@@ -336,6 +276,35 @@ public class GerenciaEvento {
 				eventoDTOList.add(dto);
 			}
 			return eventoDTOList;
+			
+		}catch(Throwable e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public EventoDTO buscarEvento(Long idEvento){
+		try{
+			if(idEvento == null || idEvento == 0){
+				throw new Exception("Parâmetros inválidos para busca do evento.");
+			}
+			
+			TypedQuery<Evento> qry = em.createQuery("select e from Evento e where id = ?1", Evento.class);
+			qry.setParameter(1, idEvento);
+			Evento entity = qry.getSingleResult();
+			
+			EventoDTO dto = new EventoDTO();
+			dto.setId(entity.getId());
+			dto.setNome(entity.getNome());
+			dto.setDataHora(entity.getDataHora());
+			dto.setColocacao(entity.getColocacao());
+			dto.setDescricao(entity.getDescricao());
+			dto.setObjetivo(entity.getObjetivo());
+			dto.setImagem(entity.getImagem());
+			dto.setSugerido(entity.getSugerido());
+			dto.setPontuacao(entity.getPontuacao());
+				
+			return dto;
 			
 		}catch(Throwable e){
 			e.printStackTrace();

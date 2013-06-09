@@ -18,6 +18,11 @@
 			<id>gcm-server-repository</id>
 			<url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
 		</repository>
+		
+		<repository>
+			<id>codehaus</id>
+			<url>http://repository.codehaus.org/org/codehaus</url>
+		</repository>
 	</repositories>
 	
 	<dependencyManagement>
@@ -33,6 +38,12 @@
 	</dependencyManagement>
 
 	<dependencies> 
+	
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.8.5</version>
+		</dependency>
 		
 		<dependency>
 	        <groupId>com.google.android.gcm</groupId>

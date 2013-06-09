@@ -15,6 +15,7 @@
         <class>com.worktogether.entities.Publicacao</class>
         <class>com.worktogether.entities.Geolocalizacao</class>
         <class>com.worktogether.entities.Presenca</class>
+        <class>com.worktogether.entities.UsuarioEvento</class>
 
       <properties>
          <property name="hibernate.hbm2ddl.auto" value="update" />
