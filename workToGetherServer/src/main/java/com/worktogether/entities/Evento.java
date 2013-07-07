@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.NamedNativeQuery;
 
-@NamedNativeQuery (callable= true, name ="callStoreProcedureEventosSugeridos", query ="call sp_eventos_sugeridos(:id_evento_list, :id_usuario, :id_evento)", resultClass = Evento.class)
+@NamedNativeQuery (callable= true, name ="callStoreProcedureEventosSugeridos", query ="call sp_eventos_sugeridos(:id_evento_list, :id_usuario, :id_evento_ext)", resultClass = Evento.class)
 @Entity
 @Table(name="evento")
 @XmlRootElement

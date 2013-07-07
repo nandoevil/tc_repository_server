@@ -27,11 +27,14 @@ public class GerenciaRanking {
 	public BigDecimal calcularPontuacaoEvento(Long idEvento, DominioTipoPontuacao origem){
 		try{
 			if(DominioTipoPontuacao.PRESENCA.toString().equalsIgnoreCase(origem.toString())){
-				return new BigDecimal(1);
+				return new BigDecimal(10);
 				
 			}else if(DominioTipoPontuacao.PUBLICACAO.toString().equalsIgnoreCase(origem.toString())){
 				return new BigDecimal(10);
-			}
+				
+			}else if(DominioTipoPontuacao.INDICAR_PRESENCA.toString().equalsIgnoreCase(origem.toString())){
+				return new BigDecimal(1);
+			}	
 			
 			return new BigDecimal(0);
 			
@@ -44,11 +47,14 @@ public class GerenciaRanking {
 	//TODO MODELAR
 	public BigDecimal calcularPontuacaoUsuarioUsuario(Long idUsuario, DominioTipoPontuacao origem){
 		try{
-			if(DominioTipoPontuacao.INDICAR_PRESENCA.toString().equals(origem.toString())){
-				return new BigDecimal(1);
-				
-			}else if(DominioTipoPontuacao.PRESENCA.toString().equalsIgnoreCase(origem.toString())){
+			if(DominioTipoPontuacao.PRESENCA.toString().equalsIgnoreCase(origem.toString())){
 				return new BigDecimal(10);
+				
+			}else if(DominioTipoPontuacao.PUBLICACAO.toString().equalsIgnoreCase(origem.toString())){
+				return new BigDecimal(10);
+				
+			}else if(DominioTipoPontuacao.INDICAR_PRESENCA.toString().equalsIgnoreCase(origem.toString())){
+				return new BigDecimal(1);
 			}
 			
 			return new BigDecimal(0);
@@ -67,7 +73,8 @@ public class GerenciaRanking {
 			Usuario usuario = qr.getSingleResult();
 			
 			BigDecimal pu = this.calcularPontuacaoUsuarioUsuario(idUsuario, origem);
-			usuario.setPontuacao(pu.add(usuario.getPontuacao()));
+			BigDecimal puo = usuario.getPontuacao();
+			usuario.setPontuacao(pu.add(puo != null ? puo : new BigDecimal(0)));
 			em.persist(usuario);
 			
 		}catch(Throwable e){
@@ -83,7 +90,8 @@ public class GerenciaRanking {
 			Evento evento = q.getSingleResult();
 			
 			BigDecimal pe = this.calcularPontuacaoEvento(idEvento, origem);
-			evento.setPontuacao(pe.add(evento.getPontuacao()));
+			BigDecimal peo = evento.getPontuacao();
+			evento.setPontuacao(pe.add(peo != null ? peo : new BigDecimal(0)));
 			em.persist(evento);
 			
 		}catch(Throwable e){
@@ -94,22 +102,11 @@ public class GerenciaRanking {
 	//TODO MODELAR
 	public List<UsuarioDTO> buscarRankingUsuario(BigDecimal  pontuacaoUltimo){
 		try{
-			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
-			
-			StringBuilder sql = new StringBuilder("select u from Usuario u");
-			
-			if(!isPrimeiraConsulta){
-				sql.append(" where u.pontuacao > ?1");
-			}
-			
-			sql.append(" order by u.pontuacao desc");
+			StringBuilder sql = new StringBuilder("select u from Usuario u ");
+			sql.append("order by u.pontuacao desc, u.nome asc ");
 			
 			TypedQuery<Usuario> qry = em.createQuery(sql.toString(), Usuario.class);
 			qry.setMaxResults(10);
-			
-			if(!isPrimeiraConsulta){
-				qry.setParameter(1, pontuacaoUltimo);
-			}
 			
 			List<Usuario> ranking = qry.getResultList();
 			List<UsuarioDTO> usuarioList = new LinkedList<UsuarioDTO>();
@@ -144,27 +141,11 @@ public class GerenciaRanking {
 	//TODO MODELAR
 	public List<EventoDTO> buscarRankingEvento(BigDecimal pontuacaoUltimo){
 		try{
-			boolean isPrimeiraConsulta = (pontuacaoUltimo == null);
-			
-			if(!isPrimeiraConsulta){
-				return new ArrayList<EventoDTO>();
-			}
-			
 			StringBuilder sql = new StringBuilder("select e from Evento e ");
-			
-			if(!isPrimeiraConsulta){
-				sql.append("where e.pontuacao > ?1 ");
-			}
-			
-			sql.append("order by e.pontuacao desc");
-			
+			sql.append("order by e.pontuacao desc, e.nome asc");
 			
 			TypedQuery<Evento> qry = em.createQuery(sql.toString(), Evento.class);
 			qry.setMaxResults(10);
-			
-			if(!isPrimeiraConsulta){
-				qry.setParameter(1, pontuacaoUltimo);
-			}
 			
 			List<Evento> ranking = qry.getResultList();
 			List<EventoDTO> eventoList = new LinkedList<EventoDTO>();

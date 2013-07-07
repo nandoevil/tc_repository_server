@@ -149,7 +149,7 @@ public class GerenciaEvento {
 		Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
 		query.setParameter("id_evento_list", eventoIds.toString());
 		query.setParameter("id_usuario", usuario.getId());
-		query.setParameter("id_evento", null);
+		query.setParameter("id_evento_ext", null);
 		
 		List<Evento> eventoList = (List<Evento>) query.list();
 		List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
@@ -187,7 +187,7 @@ public class GerenciaEvento {
 			Query query = session.getNamedQuery("callStoreProcedureEventosSugeridos");
 			query.setParameter("id_evento_list", null);
 			query.setParameter("id_usuario", idUsuario);
-			query.setParameter("id_evento", idEvento);
+			query.setParameter("id_evento_ext", idEvento);
 			
 			List<Evento> eventoList = (List<Evento>) query.list();
 			List<EventoDTO> retornoList = new ArrayList<EventoDTO>();
@@ -235,9 +235,8 @@ public class GerenciaEvento {
 			query.setParameter("longitudeA", latiLong[1]);
 			
 			List<Evento> eventoList = (List<Evento>) query.list();
-			new Thread(new GCMController(ids[1], new Long(1), "Brechó")).start();
 			for (Evento evento : eventoList) {
-				//new Thread(new GCMController(ids[1], evento.getId(), evento.getNome())).start();
+				new Thread(new GCMController(ids[1], evento.getId(), evento.getNome())).start();
 			}
 		}
 	} 
