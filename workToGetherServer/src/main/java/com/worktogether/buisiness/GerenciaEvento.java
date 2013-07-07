@@ -1,6 +1,5 @@
 package com.worktogether.buisiness;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,17 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
-import com.google.android.gcm.server.Message.Builder;
-import com.worktogether.constant.ApplicationConstant;
 import com.worktogether.dto.EventoDTO;
 import com.worktogether.dto.GeolocalizacaoDTO;
 import com.worktogether.dto.HabilidadeDTO;
@@ -35,7 +26,6 @@ import com.worktogether.entities.Presenca;
 import com.worktogether.entities.Usuario;
 import com.worktogether.entities.UsuarioEvento;
 import com.worktogether.gcm.GCMController;
-import com.worktogether.gcm.SendMessage;
 
 @Stateless
 public class GerenciaEvento {
@@ -177,6 +167,7 @@ public class GerenciaEvento {
 			dto.setImagem(entity.getImagem());
 			dto.setSugerido(entity.getSugerido());
 			dto.setPontuacao(entity.getPontuacao());
+			dto.setTipo(entity.getTipo().toString());
 			
 			retornoList.add(dto);
 		}
@@ -213,6 +204,7 @@ public class GerenciaEvento {
 				dto.setObjetivo(entity.getObjetivo());
 				dto.setImagem(entity.getImagem());
 				dto.setSugerido(entity.getSugerido());
+				dto.setTipo(entity.getTipo().toString());
 				
 				return dto;
 			}
@@ -243,8 +235,9 @@ public class GerenciaEvento {
 			query.setParameter("longitudeA", latiLong[1]);
 			
 			List<Evento> eventoList = (List<Evento>) query.list();
+			new Thread(new GCMController(ids[1], new Long(1), "Brechó")).start();
 			for (Evento evento : eventoList) {
-				new Thread(new GCMController(ids[1], evento.getId(), evento.getNome())).start();
+				//new Thread(new GCMController(ids[1], evento.getId(), evento.getNome())).start();
 			}
 		}
 	} 
@@ -272,6 +265,7 @@ public class GerenciaEvento {
 				dto.setImagem(entity.getImagem());
 				dto.setSugerido(entity.getSugerido());
 				dto.setPontuacao(entity.getPontuacao());
+				dto.setTipo(entity.getTipo().toString());
 				
 				eventoDTOList.add(dto);
 			}

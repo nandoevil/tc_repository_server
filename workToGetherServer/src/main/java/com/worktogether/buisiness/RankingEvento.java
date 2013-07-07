@@ -8,7 +8,6 @@ public class RankingEvento implements RankingEstrategia {
 		return new BigDecimal(1);
 	}
 
-	@Override
 	public BigDecimal calcularPontuacao(Long id) {
 		return new BigDecimal(1);
 	}
