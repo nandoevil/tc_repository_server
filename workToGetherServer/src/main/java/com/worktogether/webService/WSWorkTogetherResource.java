@@ -159,9 +159,13 @@ public class WSWorkTogetherResource {
 		return gre.removerPresenca(idEvento, idUsuario);
 	}
 	
-	
-	
-	
+	@POST
+	@Path("/publicar")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public void publicar(@QueryParam("idEvento") Long idEvento, @QueryParam("idUsuario") Long idUsuario){
+		grk.atualizarPontuacaoUsuario(idUsuario, DominioTipoPontuacao.PUBLICACAO);
+	}
 	
 	public String publicar(Publicacao publicacao){return null;} 
 	
