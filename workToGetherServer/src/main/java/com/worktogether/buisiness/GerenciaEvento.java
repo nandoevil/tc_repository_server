@@ -416,7 +416,10 @@ public class GerenciaEvento {
 					
 					presenca.setTipoPresenca(DominioTipoPresenca.CONFIRMADA);
 					em.persist(presenca);
+				}else{
+					return DominioStatusRequsicao.NOT_FOUND.toString();
 				}
+				
 			}else{
 				throw new Exception("Erro ao calcular distância.");
 			}
